@@ -97,6 +97,19 @@ def sceltaNumeriDaGiocare(numeriDaGiocare):
     return numeri_scelti
 
 
+def inserisciImportoDaGiocare():
+    valido = False
+    while not valido:
+        numero = input("Inserisci l'importo in euro da giocare (giocata minimo 1 euro): ")
+        if numero.isdecimal():
+            if int(numero) >= 1:
+                valido = True
+            else:
+                print(f"{numero} non è una giocata valida")
+        else:
+            print(f"{numero} non è una giocata valida")
+    return numero
+
 # Pt. 1 - I giocatori devono essere maggiorenni.
 print("Benvenuto nel gioco del lotto!")
 codice_fiscale = inserimentoCodiceFiscale()
@@ -131,5 +144,7 @@ if giocata_secca:
 numeri_scelti = sceltaNumeriDaGiocare(giocatePossibili[giocata_scelta])
 print(numeri_scelti)
 
-
+# Pt. 5 - Chiedere quanto vuole giocare.
+importo_giocato = inserisciImportoDaGiocare()
+print(f"Importo giocato {importo_giocato} euro")
 
