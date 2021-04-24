@@ -80,8 +80,24 @@ def sceltaRuota(ruote):
             print(f"{ruota_puntata} non è una ruota esistente")
     return ruota_puntata
 
+def sceltaNumeriDaGiocare(numeriDaGiocare):
+    numeri_scelti = []
+    for i in range(numeriDaGiocare):
+        valido = False
+        while not valido:
+            numero = input("Inserisci un numero da giocare compreso da 1 e 90: ")
+            if numero.isdecimal():
+                if int(numero) >= 1 and int(numero) <= 90:
+                    valido = True
+                else:
+                    print(f"{numero} non è un numero valdo")
+            else:
+                print(f"{numero} non è un numero valdo")
+        numeri_scelti.append(int(numero))
+    return numeri_scelti
 
-# Pt. 1
+
+# Pt. 1 - I giocatori devono essere maggiorenni.
 print("Benvenuto nel gioco del lotto!")
 codice_fiscale = inserimentoCodiceFiscale()
 # print(f"Il codice fiscale inserito è: {codice_fiscale}")
@@ -92,7 +108,7 @@ else:
     print("non è maggiorenne")
     exit()
 
-# Pt. 2
+# Pt. 2 - Chiedere al giocatore che tipo di giocata vuole fare.
 giocatePossibili = {
     "Estratto" : 1,
     "Ambo" : 2,
@@ -104,12 +120,16 @@ giocata_scelta = sceltaGiocata(giocatePossibili)
 numeriDaGiocare = giocatePossibili[giocata_scelta]
 # print(f"{numeriDaGiocare}")
 
-# Pt. 3
+# Pt. 3 - Chiedere la ruota se la giocata è secca altrimenti vorrà dire che è su tutte le ruote.
 giocata_secca = sceltaGiocataSecca()
 
 ruote = ['Torino', 'Milano', 'Venezia', 'Genova', 'Firenze', 'Roma', 'Napoli', 'Bari', 'Palermo', 'Cagliari', 'NAZIONALE']
 if giocata_secca:
     ruota_scelta = sceltaRuota(ruote)
     
+# Pt. 4 - Chiedere che numeri vuole giocare.
+numeri_scelti = sceltaNumeriDaGiocare(giocatePossibili[giocata_scelta])
+print(numeri_scelti)
+
 
 
