@@ -2,6 +2,8 @@
 from datetime import date
 from codicefiscale import build
 import codicefiscale
+import numpy as np
+import random
 
 def inserimentoCodiceFiscale():
     codice_fiscale = 0
@@ -100,15 +102,23 @@ def sceltaNumeriDaGiocare(numeriDaGiocare):
 def inserisciImportoDaGiocare():
     valido = False
     while not valido:
-        numero = input("Inserisci l'importo in euro da giocare (giocata minimo 1 euro): ")
+        numero = input("Inserisci l'importo in euro da giocare (giocata minimo 1 euro, massimo 200 euro): ")
         if numero.isdecimal():
-            if int(numero) >= 1:
+            if int(numero) >= 1 and int(numero) <= 200:
                 valido = True
             else:
                 print(f"{numero} non è una giocata valida")
         else:
             print(f"{numero} non è una giocata valida")
     return numero
+
+
+def estrazione():
+    for element, valore in ruote_estrazione.items():
+        ruote_estrazione[element] = np.random.randint(1, 90,(5))
+    print(ruote_estrazione[ruota_scelta])
+        
+
 
 # Pt. 1 - I giocatori devono essere maggiorenni.
 print("Benvenuto nel gioco del lotto!")
@@ -127,7 +137,7 @@ giocatePossibili = {
     "Ambo" : 2,
     "Terno" : 3,
     "Quaterna" : 4,
-    "Cinquina" : 5,
+    "Cinquina" : 5
 }
 giocata_scelta = sceltaGiocata(giocatePossibili)
 numeriDaGiocare = giocatePossibili[giocata_scelta]
@@ -147,4 +157,21 @@ print(numeri_scelti)
 # Pt. 5 - Chiedere quanto vuole giocare.
 importo_giocato = inserisciImportoDaGiocare()
 print(f"Importo giocato {importo_giocato} euro")
+
+ruote_estrazione = {
+    "Torino" : [],
+    "Milano" : [],
+    "Venezia" : [],
+    "Genova" : [],
+    "Firenze" : [],
+    "Roma" : [],
+    "Napoli" : [],
+    "Bari" : [],
+    "Palermo" : [],
+    "Cagliari" : [],
+    "NAZIONALE" : []
+}
+
+estrazione()
+print(ruote_estrazione)
 
