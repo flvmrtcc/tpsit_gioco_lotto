@@ -1,9 +1,7 @@
 # Martucci Flavio 4inf3
 from datetime import date
-from codicefiscale import build
 import codicefiscale
 import numpy as np
-import random
 
 def inserimentoCodiceFiscale():
     codice_fiscale = 0
@@ -26,7 +24,7 @@ def verficaSeMaggiorenne(codice_fiscale):
     dataNascita = codicefiscale.get_birthday(codice_fiscale)
     giorno_codice = dataNascita[0:2]
     mese_codice = dataNascita[3:5]
-    anno_codice = dataNascita[6:9]
+    anno_codice = dataNascita[6:8]
     if int(anno_codice) < 25:   # 2025
         anno = f"20{anno_codice}"
     else:
@@ -116,8 +114,28 @@ def inserisciImportoDaGiocare():
 def estrazione():
     for element, valore in ruote_estrazione.items():
         ruote_estrazione[element] = np.random.randint(1, 90,(5))
-    print(ruote_estrazione[ruota_scelta])
-        
+
+
+def calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_estrazione):
+    vinciteGiocataSecca = {
+        "1" : 55,
+        "2" : 250,
+        "3" : 4500,
+        "4" : 120000,
+        "5" : 6000000
+    }
+    numeriCorretti = 0
+    for ruota,numeriEstrazione in ruote_estrazione.items():     # esegue il for per ogni ruota
+        if ruota_scelta == ruota:   # se la ruota corrente è quella scelta
+            print(f"la ruota scelta è {ruota}")
+            print(f"i numeri usciti sono: {numeriEstrazione}")
+            for num in numeri_scelti:
+                if num in numeriEstrazione:
+                    numeriCorretti += 1
+    
+    if numeriCorretti != 0:
+        print(f"I numeri indovinati sono {numeriCorretti}. La vincita è di: {vinciteGiocataSecca[str(numeriCorretti)]}")
+
 
 
 # Pt. 1 - I giocatori devono essere maggiorenni.
@@ -173,5 +191,9 @@ ruote_estrazione = {
 }
 
 estrazione()
-print(ruote_estrazione)
+# print(ruote_estrazione)
+
+
+if giocata_secca:
+    calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_estrazione)
 
