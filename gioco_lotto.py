@@ -134,8 +134,28 @@ def calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_es
                     numeriCorretti += 1
     
     if numeriCorretti != 0:
-        print(f"I numeri indovinati sono {numeriCorretti}. La vincita è di: {vinciteGiocataSecca[str(numeriCorretti)]}")
+        vincitaTotale = vinciteGiocataSecca[str(numeriCorretti)]
+    return vincitaTotale
 
+def calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazione):
+    vinciteGiocata = {
+        "1" : 5,
+        "2" : 25,
+        "3" : 450,
+        "4" : 12000,
+        "5" : 600000
+    }
+    vincitaTotale = 0
+    for ruota,numeriEstrazione in ruote_estrazione.items():     # esegue il for per ogni ruota
+        if ruota != "NAZIONALE":
+            numeriCorretti = 0
+            for num in numeri_scelti:
+                if num in numeriEstrazione:
+                    numeriCorretti += 1
+            if numeriCorretti != 0:
+                vincitaTotale += vinciteGiocata[str(numeriCorretti)]
+
+    return vincitaTotale
 
 
 # Pt. 1 - I giocatori devono essere maggiorenni.
@@ -195,5 +215,10 @@ estrazione()
 
 
 if giocata_secca:
-    calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_estrazione)
+    vincitaTotale = calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_estrazione)
+
+if not giocata_secca:
+    vincitaTotale = calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazione)
+
+print(f"La vincita è di: {vincitaTotale}")
 
