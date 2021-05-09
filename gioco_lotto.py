@@ -125,6 +125,7 @@ def calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_es
         "5" : 6000000
     }
     numeriCorretti = 0
+    vincitaTotale = 0
     for ruota,numeriEstrazione in ruote_estrazione.items():     # esegue il for per ogni ruota
         if ruota_scelta == ruota:   # se la ruota corrente è quella scelta
             print(f"la ruota scelta è {ruota}")
@@ -132,8 +133,7 @@ def calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_es
             for num in numeri_scelti:
                 if num in numeriEstrazione:
                     numeriCorretti += 1
-    
-    if numeriCorretti != 0:
+    if numeriCorretti != 0 and len(numeri_scelti) == numeriCorretti:
         vincitaTotale = vinciteGiocataSecca[str(numeriCorretti)]
     return vincitaTotale
 
@@ -152,7 +152,7 @@ def calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazi
             for num in numeri_scelti:
                 if num in numeriEstrazione:
                     numeriCorretti += 1
-            if numeriCorretti != 0:
+            if numeriCorretti != 0 and len(numeri_scelti) == numeriCorretti:
                 vincitaTotale += vinciteGiocata[str(numeriCorretti)]
 
     return vincitaTotale
