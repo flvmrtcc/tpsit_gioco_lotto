@@ -1,6 +1,5 @@
 # Martucci Flavio 4inf3
-# from gioco_lotto import inserimentoCodiceFiscale
-from os import remove
+from datetime import date
 import tkinter as tk
 import codicefiscale
 
@@ -25,11 +24,13 @@ def inserimentoCodiceFiscale(inputCoodicefiscale):
         codice_fiscale = inputCoodicefiscale.get()
         valido = controllaValiditaCodiceFiscale(codice_fiscale)
         if valido:
-            print(str(codice_fiscale) + "preso")
+            if verficaSeMaggiorenne(codice_fiscale):
+                print("è maggiorenne")
+            else:
+                print("non è maggiorenne")
+                exit()
         else:
             print("inserire un codice valido")
-            # codice_fiscale = input("Inserisci il codice fiscale:")
-        # return codice_fiscale
 
 def controllaValiditaCodiceFiscale(codice_fiscale):
     if(codicefiscale.isvalid(codice_fiscale)):
@@ -38,6 +39,25 @@ def controllaValiditaCodiceFiscale(codice_fiscale):
         return False
 
 
+def verficaSeMaggiorenne(codice_fiscale):
+    dataNascita = codicefiscale.get_birthday(codice_fiscale)
+    giorno_codice = dataNascita[0:2]
+    mese_codice = dataNascita[3:5]
+    anno_codice = dataNascita[6:8]
+    if int(anno_codice) < 25:   # 2025
+        anno = f"20{anno_codice}"
+    else:
+        anno = f"19{anno_codice}"
+    print(giorno_codice + " " + mese_codice + " " + anno)
+    data_attuale = date.today()
+
+    if (data_attuale.year - int(anno)) > 18:
+        return True
+    elif (data_attuale.year - int(anno)) == 18:
+        if data_attuale.month >= int(mese_codice):
+            if data_attuale.day >= int(giorno_codice):
+                return True
+    return False
 
 
 def menuPrincipale():
@@ -60,9 +80,8 @@ finestra.grid_columnconfigure(0, weight=1)
 
 menuPrincipale()
 
-# e = tk.Entry()
-# e.insert(0,"")
-# e.pack()
+
+
 
 
 finestra.mainloop()
