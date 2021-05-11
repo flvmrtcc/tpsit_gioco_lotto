@@ -10,7 +10,7 @@ def cancellaElementi():
 
 def graficaInserimentoCodiceFiscale():
     cancellaElementi()
-    testo = tk.Label(finestra, text='Inserisci il codice fiscale:', bg="white", font=("Helvetica",25))
+    testo = tk.Label(finestra, text='Inserisci il tuo codice fiscale:', bg="white", font=("Helvetica",25))
     testo.place(x=400, y=120, anchor="center")
     inputCoodicefiscale = tk.Entry()
     inputCoodicefiscale.insert(0,"")
@@ -30,7 +30,8 @@ def inserimentoCodiceFiscale(inputCoodicefiscale):
                 print("non è maggiorenne")
                 exit()
         else:
-            print("inserire un codice valido")
+            testoErrore = tk.Label(text="Inserisci un codice fiscale valido", bg="white", fg="red", font=("Helvetica",11))
+            testoErrore.place(x=400, y=350, anchor="center")
 
 def controllaValiditaCodiceFiscale(codice_fiscale):
     if(codicefiscale.isvalid(codice_fiscale)):
@@ -63,12 +64,9 @@ def verficaSeMaggiorenne(codice_fiscale):
 def menuPrincipale():
     testoLotto = tk.Label(finestra, text='Lotto', bg="white", font=("Helvetica",50))
     testoLotto.place(x=400, y=120, anchor="center")
-    # testoLotto.grid(row=0, column=0, sticky="N")
 
     bottoneAvviaPartita = tk.Button(text="Nuova partita", command=graficaInserimentoCodiceFiscale)
     bottoneAvviaPartita.place(x=400, y=300, anchor="center")
-    # bottoneAvviaPartita.grid(row=1, column=0, sticky="N")
-
 
 
 
