@@ -13,7 +13,7 @@ def graficaInserimentoCodiceFiscale():
     testo = tk.Label(finestra, text='Inserisci il tuo codice fiscale:', bg="white", font=("Helvetica",25))
     testo.place(x=400, y=120, anchor="center")
     inputCoodicefiscale = tk.Entry()
-    inputCoodicefiscale.insert(0,"")
+    inputCoodicefiscale.insert(0,"SDYSTO40S06G159X")
     inputCoodicefiscale.place(x=400, y=200, anchor="center")
     
     bottoneInvioCodicefiscale = tk.Button(text="Conferma", command=lambda:inserimentoCodiceFiscale(inputCoodicefiscale))
@@ -26,6 +26,7 @@ def inserimentoCodiceFiscale(inputCoodicefiscale):
         if valido:
             if verficaSeMaggiorenne(codice_fiscale):
                 print("è maggiorenne")
+                menuSceltaGiocata()
             else:
                 print("non è maggiorenne")
                 exit()
@@ -59,6 +60,12 @@ def verficaSeMaggiorenne(codice_fiscale):
             if data_attuale.day >= int(giorno_codice):
                 return True
     return False
+
+
+def menuSceltaGiocata():
+    cancellaElementi()
+    testo = tk.Label(finestra, text='Scegli il tipo di giocata che si desidera utilizzare:', bg="white", font=("Helvetica",25))
+    testo.place(x=400, y=120, anchor="center")
 
 
 def menuPrincipale():
