@@ -216,8 +216,7 @@ def gioco():
         "Cinquina" : 5
     }
     giocata_scelta = sceltaGiocata(giocatePossibili)
-    numeriDaGiocare = giocatePossibili[giocata_scelta]
-    # print(f"{numeriDaGiocare}")
+    # numeriDaGiocare = giocatePossibili[giocata_scelta]
 
     # Pt. 3 - Chiedere la ruota se la giocata è secca altrimenti vorrà dire che è su tutte le ruote.
     giocata_secca = sceltaGiocataSecca()
@@ -225,7 +224,7 @@ def gioco():
     ruote = ['Torino', 'Milano', 'Venezia', 'Genova', 'Firenze', 'Roma', 'Napoli', 'Bari', 'Palermo', 'Cagliari', 'NAZIONALE']
     if giocata_secca:
         ruota_scelta = sceltaRuota(ruote)
-        
+    
     # Pt. 4 - Chiedere che numeri vuole giocare.
     numeri_scelti = sceltaNumeriDaGiocare(giocatePossibili[giocata_scelta])
     print(numeri_scelti)
@@ -236,7 +235,6 @@ def gioco():
 
 
     ruote_estrazione = estrazione()
-    # ruote_estrazione = leggiEstrazione()
     # print(ruote_estrazione)
 
 
