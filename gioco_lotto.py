@@ -88,7 +88,10 @@ def sceltaNumeriDaGiocare(numeriDaGiocare):
             numero = input("Inserisci un numero da giocare compreso da 1 e 90: ")
             if numero.isdecimal():
                 if int(numero) >= 1 and int(numero) <= 90:
-                    valido = True
+                    if not(numero in numeri_scelti):
+                        valido = True
+                    else:
+                        print("Inserisci un numero diverso da quelli già scelti")
                 else:
                     print(f"{numero} non è un numero valdo")
             else:
@@ -111,9 +114,21 @@ def inserisciImportoDaGiocare():
     return numero
 
 
-def estrazione():
+def salvaEstrazione(ruote_estrazione):
+    np.save('test.txt', ruote_estrazione) 
+    # fileEsteazione = open("estrazione", "w")
+    # pickle.dump(dictionary_data, a_file)
+    # fileEsteazione.close()
+
+def leggiEstrazione():
+    read_dictionary = np.load('test.txt.npy',allow_pickle='TRUE').item()
+    return read_dictionary
+
+def estrazione(ruote_estrazione):
     for element, valore in ruote_estrazione.items():
         ruote_estrazione[element] = np.random.randint(1, 90,(5))
+    salvaEstrazione(ruote_estrazione)
+    return ruote_estrazione
 
 
 def calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_estrazione):
@@ -158,67 +173,73 @@ def calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazi
     return vincitaTotale
 
 
-# Pt. 1 - I giocatori devono essere maggiorenni.
-print("Benvenuto nel gioco del lotto!")
-codice_fiscale = inserimentoCodiceFiscale()
-# print(f"Il codice fiscale inserito è: {codice_fiscale}")
+######################################################################
+def gioco():
+    # Pt. 1 - I giocatori devono essere maggiorenni.
+    print("Benvenuto nel gioco del lotto!")
+    codice_fiscale = inserimentoCodiceFiscale()
+    # print(f"Il codice fiscale inserito è: {codice_fiscale}")
 
-if verficaSeMaggiorenne(codice_fiscale):
-    print("è maggiorenne")
-else:
-    print("non è maggiorenne")
-    exit()
+    if verficaSeMaggiorenne(codice_fiscale):
+        print("è maggiorenne")
+    else:
+        print("non è maggiorenne")
+        exit()
 
-# Pt. 2 - Chiedere al giocatore che tipo di giocata vuole fare.
-giocatePossibili = {
-    "Estratto" : 1,
-    "Ambo" : 2,
-    "Terno" : 3,
-    "Quaterna" : 4,
-    "Cinquina" : 5
-}
-giocata_scelta = sceltaGiocata(giocatePossibili)
-numeriDaGiocare = giocatePossibili[giocata_scelta]
-# print(f"{numeriDaGiocare}")
+    # Pt. 2 - Chiedere al giocatore che tipo di giocata vuole fare.
+    giocatePossibili = {
+        "Estratto" : 1,
+        "Ambo" : 2,
+        "Terno" : 3,
+        "Quaterna" : 4,
+        "Cinquina" : 5
+    }
+    giocata_scelta = sceltaGiocata(giocatePossibili)
+    numeriDaGiocare = giocatePossibili[giocata_scelta]
+    # print(f"{numeriDaGiocare}")
 
-# Pt. 3 - Chiedere la ruota se la giocata è secca altrimenti vorrà dire che è su tutte le ruote.
-giocata_secca = sceltaGiocataSecca()
+    # Pt. 3 - Chiedere la ruota se la giocata è secca altrimenti vorrà dire che è su tutte le ruote.
+    giocata_secca = sceltaGiocataSecca()
 
-ruote = ['Torino', 'Milano', 'Venezia', 'Genova', 'Firenze', 'Roma', 'Napoli', 'Bari', 'Palermo', 'Cagliari', 'NAZIONALE']
-if giocata_secca:
-    ruota_scelta = sceltaRuota(ruote)
-    
-# Pt. 4 - Chiedere che numeri vuole giocare.
-numeri_scelti = sceltaNumeriDaGiocare(giocatePossibili[giocata_scelta])
-print(numeri_scelti)
+    ruote = ['Torino', 'Milano', 'Venezia', 'Genova', 'Firenze', 'Roma', 'Napoli', 'Bari', 'Palermo', 'Cagliari', 'NAZIONALE']
+    if giocata_secca:
+        ruota_scelta = sceltaRuota(ruote)
+        
+    # Pt. 4 - Chiedere che numeri vuole giocare.
+    numeri_scelti = sceltaNumeriDaGiocare(giocatePossibili[giocata_scelta])
+    print(numeri_scelti)
 
-# Pt. 5 - Chiedere quanto vuole giocare.
-importo_giocato = inserisciImportoDaGiocare()
-print(f"Importo giocato {importo_giocato} euro")
+    # Pt. 5 - Chiedere quanto vuole giocare.
+    importo_giocato = inserisciImportoDaGiocare()
+    print(f"Importo giocato {importo_giocato} euro")
 
-ruote_estrazione = {
-    "Torino" : [],
-    "Milano" : [],
-    "Venezia" : [],
-    "Genova" : [],
-    "Firenze" : [],
-    "Roma" : [],
-    "Napoli" : [],
-    "Bari" : [],
-    "Palermo" : [],
-    "Cagliari" : [],
-    "NAZIONALE" : []
-}
+    ruote_estrazione = {
+        "Torino" : [],
+        "Milano" : [],
+        "Venezia" : [],
+        "Genova" : [],
+        "Firenze" : [],
+        "Roma" : [],
+        "Napoli" : [],
+        "Bari" : [],
+        "Palermo" : [],
+        "Cagliari" : [],
+        "NAZIONALE" : []
+    }
 
-estrazione()
-# print(ruote_estrazione)
+    ruote_estrazione = estrazione(ruote_estrazione)
+    # ruote_estrazione = leggiEstrazione()
+    # print(ruote_estrazione)
 
 
-if giocata_secca:
-    vincitaTotale = calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_estrazione)
+    if giocata_secca:
+        vincitaTotale = calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_estrazione)
 
-if not giocata_secca:
-    vincitaTotale = calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazione)
+    if not giocata_secca:
+        vincitaTotale = calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazione)
 
-print(f"La vincita è di: {vincitaTotale}")
+    print(f"La vincita è di: {vincitaTotale}")
+
+
+gioco()
 
