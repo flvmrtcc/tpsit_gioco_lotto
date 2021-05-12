@@ -2,7 +2,9 @@
 from datetime import date
 import codicefiscale
 import numpy as np
+import os
 
+# Controlli codice fiscale
 def inserimentoCodiceFiscale():
     codice_fiscale = 0
     valido = False
@@ -18,7 +20,6 @@ def controllaValiditaCodiceFiscale(codice_fiscale):
     else:
         print("Il codice fiscale inserito non è valido.")
         return False
-
 
 def verficaSeMaggiorenne(codice_fiscale):
     dataNascita = codicefiscale.get_birthday(codice_fiscale)
@@ -40,6 +41,7 @@ def verficaSeMaggiorenne(codice_fiscale):
                 return True
     return False
 
+# Scelta giocata da effettuare
 def sceltaGiocata(giocatePossibili):
     valido = False
     while not valido:
@@ -65,7 +67,7 @@ def sceltaGiocataSecca():
     else:
         return False
 
-
+# Scelta della ruota su cui puntare se la giocata è secca
 def sceltaRuota(ruote):
     stringaRuoteEstenti = "Ruote disponibili: "
     for element in ruote:
@@ -80,6 +82,7 @@ def sceltaRuota(ruote):
             print(f"{ruota_puntata} non è una ruota esistente")
     return ruota_puntata
 
+# Scelta dei numeri da giocare
 def sceltaNumeriDaGiocare(numeriDaGiocare):
     numeri_scelti = []
     for i in range(numeriDaGiocare):
@@ -113,24 +116,42 @@ def inserisciImportoDaGiocare():
             print(f"{numero} non è una giocata valida")
     return numero
 
-
+# Estrazione
 def salvaEstrazione(ruote_estrazione):
-    np.save('test.txt', ruote_estrazione) 
+    np.save(f'{date.today()}', ruote_estrazione)
     # fileEsteazione = open("estrazione", "w")
     # pickle.dump(dictionary_data, a_file)
     # fileEsteazione.close()
 
 def leggiEstrazione():
-    read_dictionary = np.load('test.txt.npy',allow_pickle='TRUE').item()
+    read_dictionary = np.load(f'{date.today()}.npy',allow_pickle='TRUE').item()
     return read_dictionary
 
-def estrazione(ruote_estrazione):
-    for element, valore in ruote_estrazione.items():
-        ruote_estrazione[element] = np.random.randint(1, 90,(5))
-    salvaEstrazione(ruote_estrazione)
+def estrazione():
+    ruote_estrazione = {
+        "Torino" : [],
+        "Milano" : [],
+        "Venezia" : [],
+        "Genova" : [],
+        "Firenze" : [],
+        "Roma" : [],
+        "Napoli" : [],
+        "Bari" : [],
+        "Palermo" : [],
+        "Cagliari" : [],
+        "NAZIONALE" : []
+    }
+    if not os.path.isfile(f'{date.today()}.npy'):
+        for element, valore in ruote_estrazione.items():
+            ruote_estrazione[element] = np.random.randint(1, 90,(5))
+        salvaEstrazione(ruote_estrazione)
+        print("Estrazione effettuata")
+    else:
+        ruote_estrazione = leggiEstrazione()
+        print("File estrazione già esistente")
     return ruote_estrazione
 
-
+# Calcolo punteggio
 def calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_estrazione):
     vinciteGiocataSecca = {
         "1" : 55,
@@ -183,7 +204,7 @@ def gioco():
     if verficaSeMaggiorenne(codice_fiscale):
         print("è maggiorenne")
     else:
-        print("non è maggiorenne")
+        print("Devi essere maggiorenne per poter giocare!")
         exit()
 
     # Pt. 2 - Chiedere al giocatore che tipo di giocata vuole fare.
@@ -213,32 +234,18 @@ def gioco():
     importo_giocato = inserisciImportoDaGiocare()
     print(f"Importo giocato {importo_giocato} euro")
 
-    ruote_estrazione = {
-        "Torino" : [],
-        "Milano" : [],
-        "Venezia" : [],
-        "Genova" : [],
-        "Firenze" : [],
-        "Roma" : [],
-        "Napoli" : [],
-        "Bari" : [],
-        "Palermo" : [],
-        "Cagliari" : [],
-        "NAZIONALE" : []
-    }
 
-    ruote_estrazione = estrazione(ruote_estrazione)
+    ruote_estrazione = estrazione()
     # ruote_estrazione = leggiEstrazione()
     # print(ruote_estrazione)
 
 
     if giocata_secca:
         vincitaTotale = calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_estrazione)
-
-    if not giocata_secca:
+    else:
         vincitaTotale = calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazione)
-
     print(f"La vincita è di: {vincitaTotale}")
+
 
 
 gioco()
