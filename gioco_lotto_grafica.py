@@ -11,13 +11,14 @@ def cancellaElementi():
 def graficaInserimentoCodiceFiscale():
     cancellaElementi()
     testo = tk.Label(finestra, text='Inserisci il tuo codice fiscale:', bg="white", font=("Helvetica",25))
-    testo.place(x=400, y=120, anchor="center")
+    testo.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
     inputCoodicefiscale = tk.Entry()
+    inputCoodicefiscale.configure(font=("Helvetica", 12))
     inputCoodicefiscale.insert(0,"SDYSTO40S06G159X")
-    inputCoodicefiscale.place(x=400, y=200, anchor="center")
+    inputCoodicefiscale.place(x=DIMENSIONE_FINESTRA_X/2, y=200, height=40, width=300, anchor="center")
     
     bottoneInvioCodicefiscale = tk.Button(text="Conferma", command=lambda:inserimentoCodiceFiscale(inputCoodicefiscale))
-    bottoneInvioCodicefiscale.place(x=400, y=230, anchor="center")
+    bottoneInvioCodicefiscale.place(x=DIMENSIONE_FINESTRA_X/2, y=250, anchor="center")
 
 def inserimentoCodiceFiscale(inputCoodicefiscale):
     if inputCoodicefiscale.get():
@@ -32,7 +33,7 @@ def inserimentoCodiceFiscale(inputCoodicefiscale):
                 exit()
         else:
             testoErrore = tk.Label(text="Inserisci un codice fiscale valido", bg="white", fg="red", font=("Helvetica",11))
-            testoErrore.place(x=400, y=350, anchor="center")
+            testoErrore.place(x=DIMENSIONE_FINESTRA_X/2, y=350, anchor="center")
 
 def controllaValiditaCodiceFiscale(codice_fiscale):
     if(codicefiscale.isvalid(codice_fiscale)):
@@ -64,22 +65,25 @@ def verficaSeMaggiorenne(codice_fiscale):
 
 def menuSceltaGiocata():
     cancellaElementi()
-    testo = tk.Label(finestra, text='Scegli il tipo di giocata che si desidera utilizzare:', bg="white", font=("Helvetica",25))
-    testo.place(x=400, y=120, anchor="center")
+    testo = tk.Label(finestra, text='Scegli il tipo di giocata che si desidera effettuare:', bg="white", font=("Helvetica",25))
+    testo.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
 
 
 def menuPrincipale():
-    testoLotto = tk.Label(finestra, text='Lotto', bg="white", font=("Helvetica",50))
-    testoLotto.place(x=400, y=120, anchor="center")
+    testoLotto = tk.Label(finestra, text='Lotto', bg="white", font=("Helvetica",50,"bold"))
+    testoLotto.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
 
-    bottoneAvviaPartita = tk.Button(text="Nuova partita", command=graficaInserimentoCodiceFiscale)
-    bottoneAvviaPartita.place(x=400, y=300, anchor="center")
+    bottoneAvviaPartita = tk.Button(text="Nuova partita", height=3, width=20, bg="lightgreen", font=("Helvetica",20, "bold"), command=graficaInserimentoCodiceFiscale)
+    bottoneAvviaPartita.place(x=DIMENSIONE_FINESTRA_X/2, y=300, anchor="center")
 
 
 
 finestra = tk.Tk()
+DIMENSIONE_FINESTRA_X = 800
+DIMENSIONE_FINESTRA_Y = 600
+
 finestra.title("Gioco lotto - Martucci")
-finestra.geometry("800x600")
+finestra.geometry(f"{DIMENSIONE_FINESTRA_X}x{DIMENSIONE_FINESTRA_Y}")
 finestra.configure(background="white")
 finestra.grid_columnconfigure(0, weight=1)
 
