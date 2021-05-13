@@ -47,10 +47,10 @@ def inserimentoCodiceFiscale(inputCoodicefiscale):
         if valido:
             dati_utente["codice_fiscale"] = inputCoodicefiscale.get()
             if verficaSeMaggiorenne(codice_fiscale):
-                print("è maggiorenne")
+                # print("è maggiorenne")
                 graficaSceltaGiocata()
             else:
-                print("non è maggiorenne")
+                # print("non è maggiorenne")
                 exit()
         else:
             testoErrore = tk.Label(text="Inserisci un codice fiscale valido", bg="white", fg="red", font=("Helvetica",11))
@@ -120,6 +120,48 @@ def graficaSceltaGiocataSecca():
     bottoneSceltaGiocata.place(x=DIMENSIONE_FINESTRA_X/2+50, y=250, anchor="center")
 
 def sceltaGiocataSecca(giocataSecca):
+    if giocataSecca:
+        graficaSceltaRuota()
+
+def graficaSceltaRuota():
+    cancellaElementi()
+    testo = tk.Label(finestra, text='Scegli la ruota su cui puntare: ', bg="white", font=("Helvetica",25))
+    testo.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
+    
+    bottoneSceltaRuota = tk.Button(text="Torino", command=lambda:sceltaRuota("Torino"))
+    bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2-200, y=250, anchor="center")
+
+    bottoneSceltaRuota = tk.Button(text="Milano", command=lambda:sceltaRuota("Milano"))
+    bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2-100, y=250, anchor="center")
+
+    bottoneSceltaRuota = tk.Button(text="Venezia", command=lambda:sceltaRuota("Venezia"))
+    bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2, y=250, anchor="center")
+    
+    bottoneSceltaRuota = tk.Button(text="Genova", command=lambda:sceltaRuota("Genova"))
+    bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2+100, y=250, anchor="center")
+
+    bottoneSceltaRuota = tk.Button(text="Firenze", command=lambda:sceltaRuota("Firenze"))
+    bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2+200, y=250, anchor="center")
+
+    bottoneSceltaRuota = tk.Button(text="Roma", command=lambda:sceltaRuota("Roma"))
+    bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2-200, y=300, anchor="center")
+
+    bottoneSceltaRuota = tk.Button(text="Napoli", command=lambda:sceltaRuota("Napoli"))
+    bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2-100, y=300, anchor="center")
+
+    bottoneSceltaRuota = tk.Button(text="Bari", command=lambda:sceltaRuota("Bari"))
+    bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2, y=300, anchor="center")
+    
+    bottoneSceltaRuota = tk.Button(text="Palermo", command=lambda:sceltaRuota("Palermo"))
+    bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2+100, y=300, anchor="center")
+
+    bottoneSceltaRuota = tk.Button(text="Cagliari", command=lambda:sceltaRuota("Cagliari"))
+    bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2+200, y=300, anchor="center")
+
+    bottoneSceltaRuota = tk.Button(text="NAZIONALE", command=lambda:sceltaRuota("NAZIONALE"))
+    bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2, y=350, anchor="center")
+
+def sceltaRuota(ruota_scelta):
     pass
 
 
