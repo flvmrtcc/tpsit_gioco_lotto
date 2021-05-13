@@ -1,7 +1,5 @@
 # Martucci Flavio 4inf3
 from datetime import date, datetime
-# from datetime import time
-import datetime
 import codicefiscale
 import numpy as np
 import os
@@ -120,10 +118,10 @@ def inserisciImportoDaGiocare():
 
 # Estrazione
 def salvaEstrazione(ruote_estrazione, nomeFileEstrazione):
-    np.save(f'{nomeFileEstrazione}', ruote_estrazione)
+    np.save(nomeFileEstrazione, ruote_estrazione)   # salva l'estrazione nel file
 
 def leggiEstrazione(nomeFileEstrazione):
-    read_dictionary = np.load(f'{nomeFileEstrazione}.npy',allow_pickle='TRUE').item()
+    read_dictionary = np.load(f'{nomeFileEstrazione}.npy',allow_pickle='TRUE').item()   # prende l'estrazione dal file
     return read_dictionary
 
 def estrazione():
@@ -140,19 +138,20 @@ def estrazione():
         "Cagliari" : [],
         "NAZIONALE" : []
     }
-    oraAttuale = datetime.datetime.now().time().hour
+    oraAttuale = datetime.now().time().hour
     dataAttuale = date.today()
     giornoEstrazione = dataAttuale.day
-    if oraAttuale < 20:                 # Se non sono passate le 20 si guarda l'estrazione precedente
+    if oraAttuale < 20:                 # se non sono passate le 20 si guarda l'estrazione precedente
         giornoEstrazione -= 1
     nomeFileEstrazione = f'{dataAttuale.year}-{dataAttuale.month}-{giornoEstrazione}'
-    if not os.path.isfile(f"{nomeFileEstrazione}.npy"):
+
+    if not os.path.isfile(f"{nomeFileEstrazione}.npy"):     # controlla se esiste già il file dell'estrazione
         for element, valore in ruote_estrazione.items():
-            ruote_estrazione[element] = np.random.randint(1, 90,(5))
-        salvaEstrazione(ruote_estrazione, nomeFileEstrazione)
+            ruote_estrazione[element] = np.random.randint(1, 90,(5))    # estrae 5 numeri casuali per ogni ruota
+        salvaEstrazione(ruote_estrazione, nomeFileEstrazione)           # crea il file e salva l'estrazione
         print("Estrazione effettuata")
     else:
-        ruote_estrazione = leggiEstrazione(nomeFileEstrazione)
+        ruote_estrazione = leggiEstrazione(nomeFileEstrazione)      # se esiste prende le ruote già estratte in precedenza dal file
         print("File estrazione già esistente")
     return ruote_estrazione
 
@@ -175,7 +174,7 @@ def calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_es
                 if num in numeriEstrazione:
                     numeriCorretti += 1
     if numeriCorretti != 0 and len(numeri_scelti) == numeriCorretti:
-        vincitaTotale = vinciteGiocataSecca[str(numeriCorretti)]
+        vincitaTotale = (vinciteGiocataSecca[str(numeriCorretti)] * importo_giocato)
     return vincitaTotale
 
 def calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazione):
@@ -194,8 +193,7 @@ def calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazi
                 if num in numeriEstrazione:
                     numeriCorretti += 1
             if numeriCorretti != 0 and len(numeri_scelti) == numeriCorretti:
-                vincitaTotale += vinciteGiocata[str(numeriCorretti)]
-
+                vincitaTotale += (vinciteGiocata[str(numeriCorretti)] * importo_giocato)
     return vincitaTotale
 
 
