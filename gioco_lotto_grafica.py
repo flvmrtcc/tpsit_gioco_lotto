@@ -18,8 +18,8 @@ def graficaInserimentoUsername():
     inputUsername.insert(0,"")
     inputUsername.place(x=DIMENSIONE_FINESTRA_X/2, y=200, height=40, width=300, anchor="center")
 
-    bottoneInvioCodicefiscale = tk.Button(text="Conferma", command=lambda:inserimentoUsername(inputUsername))
-    bottoneInvioCodicefiscale.place(x=DIMENSIONE_FINESTRA_X/2, y=250, anchor="center")
+    bottoneInvioUsername = tk.Button(text="Conferma", command=lambda:inserimentoUsername(inputUsername))
+    bottoneInvioUsername.place(x=DIMENSIONE_FINESTRA_X/2, y=250, anchor="center")
 
 def inserimentoUsername(inputUsername):
     global dati_utente
@@ -48,7 +48,7 @@ def inserimentoCodiceFiscale(inputCoodicefiscale):
             dati_utente["codice_fiscale"] = inputCoodicefiscale.get()
             if verficaSeMaggiorenne(codice_fiscale):
                 print("è maggiorenne")
-                menuSceltaGiocata()
+                graficaSceltaGiocata()
             else:
                 print("non è maggiorenne")
                 exit()
@@ -82,10 +82,45 @@ def verficaSeMaggiorenne(codice_fiscale):
                 return True
     return False
 
-def menuSceltaGiocata():
+# Scelta giocata
+def graficaSceltaGiocata():
     cancellaElementi()
-    testo = tk.Label(finestra, text='Scegli il tipo di giocata che si desidera effettuare:', bg="white", font=("Helvetica",25))
+    testo = tk.Label(finestra, text='Scegli il tipo di giocata da effettuare: ', bg="white", font=("Helvetica",25))
     testo.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
+    
+    bottoneSceltaGiocata = tk.Button(text="Estratto", command=lambda:sceltaGiocata("Estratto"))
+    bottoneSceltaGiocata.place(x=DIMENSIONE_FINESTRA_X/2-200, y=250, anchor="center")
+
+    bottoneSceltaGiocata = tk.Button(text="Ambo", command=lambda:sceltaGiocata("Ambo"))
+    bottoneSceltaGiocata.place(x=DIMENSIONE_FINESTRA_X/2-100, y=250, anchor="center")
+
+    bottoneSceltaGiocata = tk.Button(text="Terno", command=lambda:sceltaGiocata("Terno"))
+    bottoneSceltaGiocata.place(x=DIMENSIONE_FINESTRA_X/2, y=250, anchor="center")
+    
+    bottoneSceltaGiocata = tk.Button(text="Quaterna", command=lambda:sceltaGiocata("Quaterna"))
+    bottoneSceltaGiocata.place(x=DIMENSIONE_FINESTRA_X/2+100, y=250, anchor="center")
+
+    bottoneSceltaGiocata = tk.Button(text="Cinquina", command=lambda:sceltaGiocata("Cinquina"))
+    bottoneSceltaGiocata.place(x=DIMENSIONE_FINESTRA_X/2+200, y=250, anchor="center")
+
+def sceltaGiocata(tipoGiocata):
+    print(tipoGiocata)
+    graficaSceltaGiocataSecca()
+
+
+def graficaSceltaGiocataSecca():
+    cancellaElementi()
+    testo = tk.Label(finestra, text='Vuoi effettuare una giocata secca?', bg="white", font=("Helvetica",25))
+    testo.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
+    
+    bottoneSceltaGiocata = tk.Button(text="Sì", command=lambda:sceltaGiocataSecca(True))
+    bottoneSceltaGiocata.place(x=DIMENSIONE_FINESTRA_X/2-50, y=250, anchor="center")
+
+    bottoneSceltaGiocata = tk.Button(text="No", command=lambda:sceltaGiocataSecca(False))
+    bottoneSceltaGiocata.place(x=DIMENSIONE_FINESTRA_X/2+50, y=250, anchor="center")
+
+def sceltaGiocataSecca(giocataSecca):
+    pass
 
 
 def menuPrincipale():
@@ -96,7 +131,7 @@ def menuPrincipale():
     bottoneAvviaPartita.place(x=DIMENSIONE_FINESTRA_X/2, y=300, anchor="center")
 
 
-
+# Globali
 DIMENSIONE_FINESTRA_X = 800
 DIMENSIONE_FINESTRA_Y = 600
 
