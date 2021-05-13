@@ -23,22 +23,22 @@ def controllaValiditaCodiceFiscale(codice_fiscale):
 
 def verficaSeMaggiorenne(codice_fiscale):
     dataNascita = codicefiscale.get_birthday(codice_fiscale)
-    giorno_codice = dataNascita[0:2]
-    mese_codice = dataNascita[3:5]
-    anno_codice = dataNascita[6:8]
+    giorno_codice = int(dataNascita[0:2])
+    mese_codice = int(dataNascita[3:5])
+    anno_codice = int(dataNascita[6:8])
     data_attuale = date.today()
 
-    if int(anno_codice) <= int(str(data_attuale.year)[2:4]):   # se le ultime due cifre dell'anno preso dal codice fiscale sono minori o uguali a quelle dell'anno attuale
-        anno = f"20{anno_codice}"
+    if anno_codice <= int(str(data_attuale.year)[2:4]):   # se le ultime due cifre dell'anno preso dal codice fiscale sono minori o uguali a quelle dell'anno attuale
+        anno = int(f"20{anno_codice}")
     else:
-        anno = f"19{anno_codice}"
-    print(giorno_codice + " " + mese_codice + " " + anno)
+        anno = int(f"19{anno_codice}")
+    # print(giorno_codice + " " + mese_codice + " " + anno)
 
-    if (data_attuale.year - int(anno)) > 18:
+    if (data_attuale.year - anno) > 18:
         return True
-    elif (data_attuale.year - int(anno)) == 18:
-        if data_attuale.month >= int(mese_codice):
-            if data_attuale.day >= int(giorno_codice):
+    elif (data_attuale.year - anno) == 18:
+        if data_attuale.month >= mese_codice:
+            if data_attuale.day >= giorno_codice:
                 return True
     return False
 
@@ -90,7 +90,8 @@ def sceltaNumeriDaGiocare(numeriDaGiocare):
         while not valido:
             numero = input("Inserisci un numero da giocare compreso da 1 e 90: ")
             if numero.isdecimal():
-                if int(numero) >= 1 and int(numero) <= 90:
+                numero = int(numero)
+                if numero >= 1 and numero <= 90:
                     if not(numero in numeri_scelti):
                         valido = True
                     else:
@@ -99,7 +100,7 @@ def sceltaNumeriDaGiocare(numeriDaGiocare):
                     print(f"{numero} non è un numero valdo")
             else:
                 print(f"{numero} non è un numero valdo")
-        numeri_scelti.append(int(numero))
+        numeri_scelti.append(numero)
     return numeri_scelti
 
 
@@ -192,7 +193,7 @@ def calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazi
 
 
 ######################################################################
-def giocoLotto():
+def mainGioco():
     dati_utente = {
         "username" : "",
         "codice_fiscale" : "",
@@ -200,7 +201,8 @@ def giocoLotto():
         "giocata_secca" : "",
         "ruota_scelta" : "",
         "importo_giocato" : 0,
-        "numeri_scelti" : ""
+        "numeri_scelti" : "",
+        "vincita_totale" : 0
     }
 
     # Pt. 1 - I giocatori devono essere maggiorenni.
@@ -245,12 +247,12 @@ def giocoLotto():
 
 
     if dati_utente["giocata_secca"]:
-        vincitaTotale = calcoloPunteggioSecca(dati_utente["ruota_scelta"], dati_utente["numeri_scelti"], dati_utente["importo_giocato"], ruote_estrazione)
+        dati_utente["vincita_totale"] = calcoloPunteggioSecca(dati_utente["ruota_scelta"], dati_utente["numeri_scelti"], dati_utente["importo_giocato"], ruote_estrazione)
     else:
-        vincitaTotale = calcoloPunteggioSuTutteLeRuote(dati_utente["numeri_scelti"], dati_utente["importo_giocato"], ruote_estrazione)
-    print(f"La vincita è di: {vincitaTotale}")
+        dati_utente["vincita_totale"] = calcoloPunteggioSuTutteLeRuote(dati_utente["numeri_scelti"], dati_utente["importo_giocato"], ruote_estrazione)
+    print(f"La vincita è di:" + str(dati_utente["vincita_totale"]))
 
 
 
-giocoLotto()
+mainGioco()
 
