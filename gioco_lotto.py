@@ -26,12 +26,13 @@ def verficaSeMaggiorenne(codice_fiscale):
     giorno_codice = dataNascita[0:2]
     mese_codice = dataNascita[3:5]
     anno_codice = dataNascita[6:8]
-    if int(anno_codice) < 25:   # 2025
+    data_attuale = date.today()
+
+    if int(anno_codice) <= int(str(data_attuale.year)[2:4]):   # se le ultime due cifre dell'anno preso dal codice fiscale sono minori o uguali a quelle dell'anno attuale
         anno = f"20{anno_codice}"
     else:
         anno = f"19{anno_codice}"
     print(giorno_codice + " " + mese_codice + " " + anno)
-    data_attuale = date.today()
 
     if (data_attuale.year - int(anno)) > 18:
         return True
@@ -46,21 +47,19 @@ def sceltaGiocata(giocatePossibili):
     valido = False
     while not valido:
         print("Segli il tipo di giocata che si desidera effettuare: ")
-        # print("(Giocate possibili: Estratto, Estratto secco, Ambo, Ambo secco, Terno, Terno secco, Quaterna, Quaterna secca, Cinquina, Cinquina Secca)")
         print("(Giocate possibili: Estratto, Ambo, Terno, Quaterna, Cinquina)")
         giocata_scelta = input()
         if str(giocata_scelta) in giocatePossibili:
             valido = True
         else:
-            print(f"{giocata_scelta} non è una giocata possibile")
-
+            print(f"'{giocata_scelta}' non è una giocata possibile")
     return giocata_scelta
 
 def sceltaGiocataSecca():
     valido = False
     while not valido:
-        tipo_giocata = input("Si desidera effettuare una giocata secca? (Y per si, N per no) ")
-        if str(tipo_giocata) == "Y" or str(tipo_giocata) == "N":
+        tipo_giocata = str(input("Si desidera effettuare una giocata secca? (Y per si, N per no) "))
+        if tipo_giocata == "Y" or tipo_giocata == "N":
             valido = True
     if tipo_giocata == "Y":
         return True
@@ -68,7 +67,8 @@ def sceltaGiocataSecca():
         return False
 
 # Scelta della ruota su cui puntare se la giocata è secca
-def sceltaRuota(ruote):
+def sceltaRuota():
+    ruote = ['Torino', 'Milano', 'Venezia', 'Genova', 'Firenze', 'Roma', 'Napoli', 'Bari', 'Palermo', 'Cagliari', 'NAZIONALE']
     stringaRuoteEstenti = "Ruote disponibili: "
     for element in ruote:
         stringaRuoteEstenti = f"{stringaRuoteEstenti} {element},"
@@ -119,9 +119,6 @@ def inserisciImportoDaGiocare():
 # Estrazione
 def salvaEstrazione(ruote_estrazione):
     np.save(f'{date.today()}', ruote_estrazione)
-    # fileEsteazione = open("estrazione", "w")
-    # pickle.dump(dictionary_data, a_file)
-    # fileEsteazione.close()
 
 def leggiEstrazione():
     read_dictionary = np.load(f'{date.today()}.npy',allow_pickle='TRUE').item()
@@ -231,9 +228,8 @@ def giocoLotto():
     # Pt. 3 - Chiedere la ruota se la giocata è secca altrimenti vorrà dire che è su tutte le ruote.
     dati_utente["giocata_secca"] = sceltaGiocataSecca()
 
-    ruote = ['Torino', 'Milano', 'Venezia', 'Genova', 'Firenze', 'Roma', 'Napoli', 'Bari', 'Palermo', 'Cagliari', 'NAZIONALE']
     if dati_utente["giocata_secca"]:
-        dati_utente["ruota_scelta"] = sceltaRuota(ruote)
+        dati_utente["ruota_scelta"] = sceltaRuota()
     
     # Pt. 4 - Chiedere che numeri vuole giocare.
     dati_utente["numeri_scelti"] = sceltaNumeriDaGiocare(giocatePossibili[dati_utente["giocata_scelta"]])
@@ -241,7 +237,7 @@ def giocoLotto():
 
     # Pt. 5 - Chiedere quanto vuole giocare.
     dati_utente["importo_giocato"] = inserisciImportoDaGiocare()
-    print(f"Importo giocato" + dati_utente["importo_giocato"] + " euro")
+    print("Importo giocato" + dati_utente["importo_giocato"] + " euro")
 
 
     ruote_estrazione = estrazione()
