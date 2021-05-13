@@ -4,6 +4,12 @@ import codicefiscale
 import numpy as np
 import os
 
+
+# Inserimento username
+def inserimentoUsername():
+    username = input("Inserisci l'username: ")
+    return username
+
 # Controlli codice fiscale
 def inserimentoCodiceFiscale():
     codice_fiscale = 0
@@ -210,8 +216,11 @@ def mainGioco():
         "vincita_totale" : 0
     }
 
-    # Pt. 1 - I giocatori devono essere maggiorenni.
     print("Benvenuto nel gioco del lotto!")
+    # Inserisci username
+    dati_utente["username"] = inserimentoUsername()
+
+    # Pt. 1 - I giocatori devono essere maggiorenni.
     dati_utente["codice_fiscale"] = inserimentoCodiceFiscale()
     # print(f"Il codice fiscale inserito è: {codice_fiscale}")
 
