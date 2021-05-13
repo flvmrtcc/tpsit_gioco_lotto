@@ -199,7 +199,7 @@ def calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazi
                 if num in numeriEstrazione:
                     numeriCorretti += 1
             if numeriCorretti != 0 and len(numeri_scelti) == numeriCorretti:
-                vincitaTotale += (vinciteGiocata[str(numeriCorretti)] * importo_giocato)
+                vincitaTotale += (int(vinciteGiocata[str(numeriCorretti)]) * int(importo_giocato))
     return vincitaTotale
 
 
