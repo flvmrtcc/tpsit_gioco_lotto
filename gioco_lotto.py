@@ -195,13 +195,23 @@ def calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazi
 
 
 ######################################################################
-def gioco():
+def giocoLotto():
+    dati_utente = {
+        "username" : "",
+        "codice_fiscale" : "",
+        "giocata_scelta" : "",
+        "giocata_secca" : "",
+        "ruota_scelta" : "",
+        "importo_giocato" : 0,
+        "numeri_scelti" : ""
+    }
+
     # Pt. 1 - I giocatori devono essere maggiorenni.
     print("Benvenuto nel gioco del lotto!")
-    codice_fiscale = inserimentoCodiceFiscale()
+    dati_utente["codice_fiscale"] = inserimentoCodiceFiscale()
     # print(f"Il codice fiscale inserito è: {codice_fiscale}")
 
-    if verficaSeMaggiorenne(codice_fiscale):
+    if verficaSeMaggiorenne(dati_utente["codice_fiscale"]):
         print("è maggiorenne")
     else:
         print("Devi essere maggiorenne per poter giocare!")
@@ -215,36 +225,36 @@ def gioco():
         "Quaterna" : 4,
         "Cinquina" : 5
     }
-    giocata_scelta = sceltaGiocata(giocatePossibili)
+    dati_utente["giocata_scelta"] = sceltaGiocata(giocatePossibili)
     # numeriDaGiocare = giocatePossibili[giocata_scelta]
 
     # Pt. 3 - Chiedere la ruota se la giocata è secca altrimenti vorrà dire che è su tutte le ruote.
-    giocata_secca = sceltaGiocataSecca()
+    dati_utente["giocata_secca"] = sceltaGiocataSecca()
 
     ruote = ['Torino', 'Milano', 'Venezia', 'Genova', 'Firenze', 'Roma', 'Napoli', 'Bari', 'Palermo', 'Cagliari', 'NAZIONALE']
-    if giocata_secca:
-        ruota_scelta = sceltaRuota(ruote)
+    if dati_utente["giocata_secca"]:
+        dati_utente["ruota_scelta"] = sceltaRuota(ruote)
     
     # Pt. 4 - Chiedere che numeri vuole giocare.
-    numeri_scelti = sceltaNumeriDaGiocare(giocatePossibili[giocata_scelta])
-    print(numeri_scelti)
+    dati_utente["numeri_scelti"] = sceltaNumeriDaGiocare(giocatePossibili[dati_utente["giocata_scelta"]])
+    print(dati_utente["numeri_scelti"])
 
     # Pt. 5 - Chiedere quanto vuole giocare.
-    importo_giocato = inserisciImportoDaGiocare()
-    print(f"Importo giocato {importo_giocato} euro")
+    dati_utente["importo_giocato"] = inserisciImportoDaGiocare()
+    print(f"Importo giocato" + dati_utente["importo_giocato"] + " euro")
 
 
     ruote_estrazione = estrazione()
     # print(ruote_estrazione)
 
 
-    if giocata_secca:
-        vincitaTotale = calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_estrazione)
+    if dati_utente["giocata_secca"]:
+        vincitaTotale = calcoloPunteggioSecca(dati_utente["ruota_scelta"], dati_utente["numeri_scelti"], dati_utente["importo_giocato"], ruote_estrazione)
     else:
-        vincitaTotale = calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazione)
+        vincitaTotale = calcoloPunteggioSuTutteLeRuote(dati_utente["numeri_scelti"], dati_utente["importo_giocato"], ruote_estrazione)
     print(f"La vincita è di: {vincitaTotale}")
 
 
 
-gioco()
+giocoLotto()
 
