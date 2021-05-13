@@ -1,5 +1,7 @@
 # Martucci Flavio 4inf3
-from datetime import date
+from datetime import date, datetime
+# from datetime import time
+import datetime
 import codicefiscale
 import numpy as np
 import os
@@ -33,7 +35,6 @@ def verficaSeMaggiorenne(codice_fiscale):
     else:
         anno = int(f"19{anno_codice}")
     # print(giorno_codice + " " + mese_codice + " " + anno)
-
     if (data_attuale.year - anno) > 18:
         return True
     elif (data_attuale.year - anno) == 18:
@@ -118,11 +119,11 @@ def inserisciImportoDaGiocare():
     return numero
 
 # Estrazione
-def salvaEstrazione(ruote_estrazione):
-    np.save(f'{date.today()}', ruote_estrazione)
+def salvaEstrazione(ruote_estrazione, nomeFileEstrazione):
+    np.save(f'{nomeFileEstrazione}', ruote_estrazione)
 
-def leggiEstrazione():
-    read_dictionary = np.load(f'{date.today()}.npy',allow_pickle='TRUE').item()
+def leggiEstrazione(nomeFileEstrazione):
+    read_dictionary = np.load(f'{nomeFileEstrazione}.npy',allow_pickle='TRUE').item()
     return read_dictionary
 
 def estrazione():
@@ -139,13 +140,19 @@ def estrazione():
         "Cagliari" : [],
         "NAZIONALE" : []
     }
-    if not os.path.isfile(f'{date.today()}.npy'):
+    oraAttuale = datetime.datetime.now().time().hour
+    dataAttuale = date.today()
+    giornoEstrazione = dataAttuale.day
+    if oraAttuale < 20:                 # Se non sono passate le 20 si guarda l'estrazione precedente
+        giornoEstrazione -= 1
+    nomeFileEstrazione = f'{dataAttuale.year}-{dataAttuale.month}-{giornoEstrazione}'
+    if not os.path.isfile(f"{nomeFileEstrazione}.npy"):
         for element, valore in ruote_estrazione.items():
             ruote_estrazione[element] = np.random.randint(1, 90,(5))
-        salvaEstrazione(ruote_estrazione)
+        salvaEstrazione(ruote_estrazione, nomeFileEstrazione)
         print("Estrazione effettuata")
     else:
-        ruote_estrazione = leggiEstrazione()
+        ruote_estrazione = leggiEstrazione(nomeFileEstrazione)
         print("File estrazione già esistente")
     return ruote_estrazione
 
@@ -239,7 +246,7 @@ def mainGioco():
 
     # Pt. 5 - Chiedere quanto vuole giocare.
     dati_utente["importo_giocato"] = inserisciImportoDaGiocare()
-    print("Importo giocato" + dati_utente["importo_giocato"] + " euro")
+    print("Importo giocato: " + dati_utente["importo_giocato"] + " euro")
 
 
     ruote_estrazione = estrazione()
@@ -250,7 +257,7 @@ def mainGioco():
         dati_utente["vincita_totale"] = calcoloPunteggioSecca(dati_utente["ruota_scelta"], dati_utente["numeri_scelti"], dati_utente["importo_giocato"], ruote_estrazione)
     else:
         dati_utente["vincita_totale"] = calcoloPunteggioSuTutteLeRuote(dati_utente["numeri_scelti"], dati_utente["importo_giocato"], ruote_estrazione)
-    print(f"La vincita è di:" + str(dati_utente["vincita_totale"]))
+    print(f"La vincita è di: " + str(dati_utente["vincita_totale"]) + " euro")
 
 
 
