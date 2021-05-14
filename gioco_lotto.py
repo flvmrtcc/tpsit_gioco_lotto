@@ -31,17 +31,20 @@ def verficaSeMaggiorenne(codice_fiscale):
     dataNascita = codicefiscale.get_birthday(codice_fiscale)    # data di nascita ricavata dal codice fiscale
     giorno_codice = int(dataNascita[0:2])
     mese_codice = int(dataNascita[3:5])
-    anno_codice = int(dataNascita[6:8])
+    anno_codice = dataNascita[6:8]
     data_attuale = date.today()                 # data corrente
 
-    if anno_codice <= int(str(data_attuale.year)[2:4]):   # se le ultime due cifre dell'anno preso dal codice fiscale sono minori o uguali a quelle dell'anno attuale
+    if int(anno_codice) <= int(str(data_attuale.year)[2:4]):   # se le ultime due cifre dell'anno preso dal codice fiscale sono minori o uguali a quelle dell'anno attuale
         anno = int(f"20{anno_codice}")
     else:
         anno = int(f"19{anno_codice}")
+    
     if (data_attuale.year - anno) > 18:     # controlli per verificare che sia maggiorenne (confronti della data di nascita con la data corrente)
         return True
     elif (data_attuale.year - anno) == 18:
-        if data_attuale.month >= mese_codice:
+        if data_attuale.month > mese_codice:
+            return True
+        elif data_attuale.month == mese_codice:
             if data_attuale.day >= giorno_codice:
                 return True
     return False                            # se non è maggiorenne la funzione restituisce False, altrimenti True
