@@ -223,7 +223,7 @@ def mainGioco():
     # print(f"Il codice fiscale inserito è: {codice_fiscale}")
 
     if verficaSeMaggiorenne(dati_utente["codice_fiscale"]):
-        print("è maggiorenne")
+        print("Sei maggiorenne, puoi giocare!")
     else:
         print("Devi essere maggiorenne per poter giocare!")
         exit()                           # se è minorenne non può giocare ed il programma termima
@@ -262,7 +262,11 @@ def mainGioco():
         dati_utente["vincita_totale"] = calcoloPunteggioSecca(dati_utente["ruota_scelta"], dati_utente["numeri_scelti"], dati_utente["importo_giocato"], ruote_estrazione)
     else:
         dati_utente["vincita_totale"] = calcoloPunteggioSuTutteLeRuote(dati_utente["numeri_scelti"], dati_utente["importo_giocato"], ruote_estrazione)
-    print(f"La vincita è di: " + str(dati_utente["vincita_totale"]) + " euro")
+    
+    if dati_utente["vincita_totale"] > 0:
+        print(f"Complimenti " + dati_utente["username"] + "! La tua vincita è di: " + str(dati_utente["vincita_totale"]) + " euro.")
+    else:
+        print("Non hai vinto, riprova.")
 
 
 

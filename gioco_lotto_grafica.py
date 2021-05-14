@@ -162,7 +162,7 @@ def graficaSceltaRuota():
     bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2, y=350, anchor="center")
 
 def sceltaRuota(ruota_scelta):
-    pass
+    print(ruota_scelta)
 
 
 def menuPrincipale():
