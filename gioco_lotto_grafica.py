@@ -10,6 +10,14 @@ def cancellaElementi():
     for widget in finestra.winfo_children():
         widget.destroy()
 
+def menuPrincipale():
+    testoLotto = tk.Label(finestra, text='Lotto', bg="white", font=("Helvetica",50,"bold"))
+    testoLotto.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
+
+    bottoneAvviaPartita = tk.Button(text="Nuova partita", height=3, width=20, bg="lightgreen", font=("Helvetica",20, "bold"), command=graficaInserimentoUsername)
+    bottoneAvviaPartita.place(x=DIMENSIONE_FINESTRA_X/2, y=300, anchor="center")
+
+
 # Inserimento username
 def graficaInserimentoUsername():
     cancellaElementi()
@@ -56,8 +64,6 @@ def inserimentoCodiceFiscale(inputCoodicefiscale):
             testoErrore = tk.Label(text="Inserisci un codice fiscale valido", bg="white", fg="red", font=("Helvetica",11))
             testoErrore.place(x=DIMENSIONE_FINESTRA_X/2, y=350, anchor="center")
 
-
-
 def verficaSeMaggiorenne(codice_fiscale):
     dataNascita = codicefiscale.get_birthday(codice_fiscale)    # data di nascita ricavata dal codice fiscale
     giorno_codice = int(dataNascita[0:2])
@@ -103,10 +109,9 @@ def graficaSceltaGiocata():
 
 def sceltaGiocata(tipoGiocata):
     dati_utente["giocata_scelta"] = tipoGiocata
-    # print(tipoGiocata)
     graficaSceltaGiocataSecca()
 
-
+# Scelta se effettuare una giocata secca
 def graficaSceltaGiocataSecca():
     cancellaElementi()
     testo = tk.Label(finestra, text='Vuoi effettuare una giocata secca?', bg="white", font=("Helvetica",25))
@@ -125,6 +130,7 @@ def sceltaGiocataSecca(giocataSecca):
     else:
         graficaSceltaNumeriDaGiocare()
 
+# Scelta ruota giocata non secca
 def graficaSceltaRuota():
     cancellaElementi()
     testo = tk.Label(finestra, text='Scegli la ruota su cui puntare: ', bg="white", font=("Helvetica",25))
@@ -164,11 +170,10 @@ def graficaSceltaRuota():
     bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2, y=350, anchor="center")
 
 def sceltaRuota(ruota_scelta):
-    # print(ruota_scelta)
     dati_utente["ruota_scelta"] = ruota_scelta
     graficaSceltaNumeriDaGiocare()
 
-
+# Scelta numeri da giocare
 def graficaSceltaNumeriDaGiocare() :
     cancellaElementi()
     testo = tk.Label(finestra, text='Scegli i numeri che vuoi giocare: ', bg="white", font=("Helvetica",25))
@@ -185,10 +190,8 @@ def graficaSceltaNumeriDaGiocare() :
         inputNumeri[i].insert(0,"")
         inputNumeri[i].place(x=DIMENSIONE_FINESTRA_X/2, y=200+y1, height=40, width=300, anchor="center")
         y1 += 50
-    
     bottoneInvioCodicefiscale = tk.Button(text="Conferma", command=lambda:sceltaNumeriDaGiocare(inputNumeri))
     bottoneInvioCodicefiscale.place(x=DIMENSIONE_FINESTRA_X/2, y=200+y1+10, anchor="center")
-
 
 def sceltaNumeriDaGiocare(inputNumeriScelti):
     elencoValido = True
@@ -204,9 +207,6 @@ def sceltaNumeriDaGiocare(inputNumeriScelti):
                 if int(num) >= 1 and int(num) <= 90:    # controlla che il numero inserito sia compreso tra 1 e 90
                     if numeriScelti.count(num) == 1:
                         numeroValido = True
-                else:
-                    print(f"{num} non è un numero valdo")
-
         if numeroValido:
             inputNumeriScelti[pos_numero].configure(bg="lightgreen")
         else:
@@ -219,7 +219,11 @@ def sceltaNumeriDaGiocare(inputNumeriScelti):
     if elencoValido:
         dati_utente["numeri_scelti"] = numeriScelti
         graficaSceltaImportoDaGiocare()
+    else:
+        testoErrore = tk.Label(text="Sono stati inseriti alcuni numeri non validi.\nInserisci dei numeri da giocare validi!", bg="white", fg="red", font=("Helvetica",11))
+        testoErrore.place(x=DIMENSIONE_FINESTRA_X/2, y=550, anchor="center")
 
+# Scelta importo da giocare
 def graficaSceltaImportoDaGiocare():
     cancellaElementi()
     testo = tk.Label(finestra, text="Inserisci l'importo in euro che vuoi giocare: ", bg="white", font=("Helvetica",25))
@@ -242,10 +246,11 @@ def controlloSceltaImportoDaGiocare(inputImportoEuro):
     if numero.isdecimal():  # controlla che sia stato inserito un valore numerico
         if int(numero) >= 1 and int(numero) <= 200:
             valido = True
-        else:
-            print(f"{numero} non è una giocata valida")
-    else:
-        print(f"{numero} non è una giocata valida")
+
+    if not valido:              # Se l'importo inserito non è valido mostra l'errore
+        inputImportoEuro.configure(bg="red")
+        testoErrore = tk.Label(text="Inserisci un importo da giocare valido", bg="white", fg="red", font=("Helvetica",11))
+        testoErrore.place(x=DIMENSIONE_FINESTRA_X/2, y=350, anchor="center")
 
     if valido:
         cancellaElementi()
@@ -257,13 +262,7 @@ def controlloSceltaImportoDaGiocare(inputImportoEuro):
         else:
             dati_utente["vincita_totale"] = calcoloPunteggioSuTutteLeRuote(dati_utente["numeri_scelti"], dati_utente["importo_giocato"], ruote_estrazione)
 
-        print(ruote_estrazione)
-        print(dati_utente["numeri_scelti"])
-        print(dati_utente["vincita_totale"])
-        if dati_utente["vincita_totale"] > 0:
-            print(f"Complimenti " + dati_utente["username"] + "! La tua vincita è di: " + str(dati_utente["vincita_totale"]) + " euro.")
-        else:
-            print("Non hai vinto, riprova.")
+        graficaFinale()
 
 
 # Estrazione
@@ -323,7 +322,7 @@ def calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_es
             print(f"la ruota scelta è {ruota}")
             print(f"i numeri usciti sono: {numeriEstrazione}")
             for num in numeri_scelti:
-                if num in numeriEstrazione:
+                if int(num) in numeriEstrazione:
                     numeriCorretti += 1
     if numeriCorretti != 0 and len(numeri_scelti) == numeriCorretti:
         vincitaTotale = (vinciteGiocataSecca[str(numeriCorretti)] * importo_giocato)
@@ -342,19 +341,22 @@ def calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazi
         if ruota != "NAZIONALE":            # la ruota nazionale viene saltata quando si gioca su tutte le ruote
             numeriCorretti = 0
             for num in numeri_scelti:
-                if num in numeriEstrazione:
+                if int(num) in numeriEstrazione:
                     numeriCorretti += 1
             if numeriCorretti != 0 and len(numeri_scelti) == numeriCorretti:
                 vincitaTotale += (int(vinciteGiocata[str(numeriCorretti)]) * int(importo_giocato))
     return vincitaTotale
 
+# Grafica che mostra la vincita
+def graficaFinale():
+    testo = tk.Label(finestra, text="Risultato della giocata: ", bg="white", font=("Helvetica",25))
+    testo.place(x=DIMENSIONE_FINESTRA_X/2, y=100, anchor="center")
 
-def menuPrincipale():
-    testoLotto = tk.Label(finestra, text='Lotto', bg="white", font=("Helvetica",50,"bold"))
-    testoLotto.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
-
-    bottoneAvviaPartita = tk.Button(text="Nuova partita", height=3, width=20, bg="lightgreen", font=("Helvetica",20, "bold"), command=graficaInserimentoUsername)
-    bottoneAvviaPartita.place(x=DIMENSIONE_FINESTRA_X/2, y=300, anchor="center")
+    if dati_utente["vincita_totale"] > 0:
+        testo2 = tk.Label(finestra, text=(f"Complimenti " + dati_utente["username"] + "! La tua vincita è di: " + str(dati_utente["vincita_totale"]) + " euro."), bg="white", fg="green", font=("Helvetica",25))
+    else:
+        testo2 = tk.Label(finestra, text="Non hai vinto, riprova.", bg="white", fg="red", font=("Helvetica",25))
+    testo2.place(x=DIMENSIONE_FINESTRA_X/2, y=140, anchor="center")
 
 
 # Globali
