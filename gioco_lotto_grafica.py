@@ -1,7 +1,9 @@
 # Martucci Flavio 4inf3
-from datetime import date
+from datetime import date, datetime
 import tkinter as tk
 import codicefiscale
+import numpy as np
+import os
 
 
 def cancellaElementi():
@@ -172,7 +174,7 @@ def graficaSceltaNumeriDaGiocare() :
     testo = tk.Label(finestra, text='Scegli i numeri che vuoi giocare: ', bg="white", font=("Helvetica",25))
     testo.place(x=DIMENSIONE_FINESTRA_X/2, y=100, anchor="center")
 
-    testo2 = tk.Label(finestra, text='(I numeri devono essere comresi tra 1 e 90) ', bg="white", font=("Helvetica",12,"italic"))
+    testo2 = tk.Label(finestra, text='(I numeri devono essere compresi tra 1 e 90) ', bg="white", font=("Helvetica",12,"italic"))
     testo2.place(x=DIMENSIONE_FINESTRA_X/2, y=140, anchor="center")
 
     y1 = 0
@@ -215,6 +217,7 @@ def sceltaNumeriDaGiocare(inputNumeriScelti):
         pos_numero += 1
 
     if elencoValido:
+        dati_utente["numeri_scelti"] = numeriScelti
         graficaSceltaImportoDaGiocare()
 
 def graficaSceltaImportoDaGiocare():
@@ -246,6 +249,104 @@ def controlloSceltaImportoDaGiocare(inputImportoEuro):
 
     if valido:
         cancellaElementi()
+        dati_utente["importo_giocato"] = numero
+        ruote_estrazione = estrazione()
+
+        if dati_utente["giocata_secca"]:        # se la giocata è secca
+            dati_utente["vincita_totale"] = calcoloPunteggioSecca(dati_utente["ruota_scelta"], dati_utente["numeri_scelti"], dati_utente["importo_giocato"], ruote_estrazione)
+        else:
+            dati_utente["vincita_totale"] = calcoloPunteggioSuTutteLeRuote(dati_utente["numeri_scelti"], dati_utente["importo_giocato"], ruote_estrazione)
+
+        print(ruote_estrazione)
+        print(dati_utente["numeri_scelti"])
+        print(dati_utente["vincita_totale"])
+        if dati_utente["vincita_totale"] > 0:
+            print(f"Complimenti " + dati_utente["username"] + "! La tua vincita è di: " + str(dati_utente["vincita_totale"]) + " euro.")
+        else:
+            print("Non hai vinto, riprova.")
+
+
+# Estrazione
+def salvaEstrazione(ruote_estrazione, nomeFileEstrazione):
+    np.save(nomeFileEstrazione, ruote_estrazione)   # salva l'estrazione nel file
+
+def leggiEstrazione(nomeFileEstrazione):
+    read_dictionary = np.load(f'{nomeFileEstrazione}.npy',allow_pickle='TRUE').item()   # prende l'estrazione dal file
+    return read_dictionary
+
+def estrazione():
+    ruote_estrazione = {
+        "Torino" : [],
+        "Milano" : [],
+        "Venezia" : [],
+        "Genova" : [],
+        "Firenze" : [],
+        "Roma" : [],
+        "Napoli" : [],
+        "Bari" : [],
+        "Palermo" : [],
+        "Cagliari" : [],
+        "NAZIONALE" : []
+    }
+    oraAttuale = datetime.now().time().hour
+    dataAttuale = date.today()
+    giornoEstrazione = dataAttuale.day
+    if oraAttuale < 20:                 # se non sono passate le 20 si guarda l'estrazione precedente
+        giornoEstrazione -= 1
+    nomeFileEstrazione = f'{dataAttuale.year}-{dataAttuale.month}-{giornoEstrazione}'
+
+    if not os.path.isfile(f"{nomeFileEstrazione}.npy"):     # controlla se esiste già il file dell'estrazione
+        for element, valore in ruote_estrazione.items():
+            ruote_estrazione[element] = np.random.randint(1, 90,(5))    # estrae 5 numeri casuali per ogni ruota
+        salvaEstrazione(ruote_estrazione, nomeFileEstrazione)           # crea il file e salva l'estrazione
+        print("Estrazione effettuata")
+    else:
+        ruote_estrazione = leggiEstrazione(nomeFileEstrazione)      # se esiste prende le ruote già estratte in precedenza dal file
+        print("File estrazione già esistente")
+    return ruote_estrazione
+
+
+
+# Calcolo punteggio
+def calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_estrazione):
+    vinciteGiocataSecca = {     # dizionario per indicare le vincite per ogni tipo di giocata
+        "1" : 55,
+        "2" : 250,
+        "3" : 4500,
+        "4" : 120000,
+        "5" : 6000000
+    }
+    numeriCorretti = 0
+    vincitaTotale = 0
+    for ruota,numeriEstrazione in ruote_estrazione.items():     # esegue il for per ogni ruota
+        if ruota_scelta == ruota:   # se la ruota corrente è quella scelta
+            print(f"la ruota scelta è {ruota}")
+            print(f"i numeri usciti sono: {numeriEstrazione}")
+            for num in numeri_scelti:
+                if num in numeriEstrazione:
+                    numeriCorretti += 1
+    if numeriCorretti != 0 and len(numeri_scelti) == numeriCorretti:
+        vincitaTotale = (vinciteGiocataSecca[str(numeriCorretti)] * importo_giocato)
+    return vincitaTotale
+
+def calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazione):
+    vinciteGiocata = {          # dizionario per indicare le vincite per ogni tipo di giocata
+        "1" : 5,
+        "2" : 25,
+        "3" : 450,
+        "4" : 12000,
+        "5" : 600000
+    }
+    vincitaTotale = 0
+    for ruota,numeriEstrazione in ruote_estrazione.items():     # esegue il for per ogni ruota
+        if ruota != "NAZIONALE":            # la ruota nazionale viene saltata quando si gioca su tutte le ruote
+            numeriCorretti = 0
+            for num in numeri_scelti:
+                if num in numeriEstrazione:
+                    numeriCorretti += 1
+            if numeriCorretti != 0 and len(numeri_scelti) == numeriCorretti:
+                vincitaTotale += (int(vinciteGiocata[str(numeriCorretti)]) * int(importo_giocato))
+    return vincitaTotale
 
 
 def menuPrincipale():
@@ -265,6 +366,7 @@ finestra.title("Gioco lotto - Martucci")
 finestra.geometry(f"{DIMENSIONE_FINESTRA_X}x{DIMENSIONE_FINESTRA_Y}")
 finestra.configure(background="white")
 finestra.grid_columnconfigure(0, weight=1)
+finestra.resizable(False,False)     # impedisce il ridimensionamento della finestra
 
 dati_utente = {
     "username" : "",
