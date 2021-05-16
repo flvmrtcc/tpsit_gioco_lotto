@@ -220,7 +220,10 @@ def sceltaNumeriDaGiocare(inputNumeriScelti):
 def graficaSceltaImportoDaGiocare():
     cancellaElementi()
     testo = tk.Label(finestra, text="Inserisci l'importo in euro che vuoi giocare: ", bg="white", font=("Helvetica",25))
-    testo.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
+    testo.place(x=DIMENSIONE_FINESTRA_X/2, y=100, anchor="center")
+
+    testo2 = tk.Label(finestra, text='(Minimo 1 euro, massimo 200 euro) ', bg="white", font=("Helvetica",12,"italic"))
+    testo2.place(x=DIMENSIONE_FINESTRA_X/2, y=140, anchor="center")
 
     inputImportoEuro = tk.Entry()
     inputImportoEuro.configure(font=("Helvetica", 12), bg="lightgray")
@@ -231,7 +234,18 @@ def graficaSceltaImportoDaGiocare():
     bottoneInvioImportoEuro.place(x=DIMENSIONE_FINESTRA_X/2, y=250, anchor="center")
 
 def controlloSceltaImportoDaGiocare(inputImportoEuro):
-    inputImportoEuro.get()
+    valido = False
+    numero = inputImportoEuro.get()
+    if numero.isdecimal():  # controlla che sia stato inserito un valore numerico
+        if int(numero) >= 1 and int(numero) <= 200:
+            valido = True
+        else:
+            print(f"{numero} non è una giocata valida")
+    else:
+        print(f"{numero} non è una giocata valida")
+
+    if valido:
+        cancellaElementi()
 
 
 def menuPrincipale():
