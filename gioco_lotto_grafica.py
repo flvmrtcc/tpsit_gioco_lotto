@@ -200,16 +200,8 @@ def sceltaNumeriDaGiocare(inputNumeriScelti):
         if len(numeriScelti) == giocatePossibili[dati_utente["giocata_scelta"]]:
             if num.isdecimal():
                 if int(num) >= 1 and int(num) <= 90:    # controlla che il numero inserito sia compreso tra 1 e 90
-                    pos = 0
-                    cont = 0
-                    while not pos == len(numeriScelti):
-                        if num == numeriScelti[pos]:
-                            cont += 1
-                            if cont > 1:
-                                print(f"{num} è stato scelto più volte")
-                            else:
-                                numeroValido = True
-                        pos += 1
+                    if numeriScelti.count(num) == 1:
+                        numeroValido = True
                 else:
                     print(f"{num} non è un numero valdo")
 
