@@ -215,8 +215,23 @@ def sceltaNumeriDaGiocare(inputNumeriScelti):
         pos_numero += 1
 
     if elencoValido:
-        cancellaElementi()
+        graficaSceltaImportoDaGiocare()
 
+def graficaSceltaImportoDaGiocare():
+    cancellaElementi()
+    testo = tk.Label(finestra, text="Inserisci l'importo in euro che vuoi giocare: ", bg="white", font=("Helvetica",25))
+    testo.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
+
+    inputImportoEuro = tk.Entry()
+    inputImportoEuro.configure(font=("Helvetica", 12), bg="lightgray")
+    inputImportoEuro.insert(0,"1")
+    inputImportoEuro.place(x=DIMENSIONE_FINESTRA_X/2, y=200, height=40, width=300, anchor="center")
+
+    bottoneInvioImportoEuro = tk.Button(text="Conferma", command=lambda:controlloSceltaImportoDaGiocare(inputImportoEuro))
+    bottoneInvioImportoEuro.place(x=DIMENSIONE_FINESTRA_X/2, y=250, anchor="center")
+
+def controlloSceltaImportoDaGiocare(inputImportoEuro):
+    inputImportoEuro.get()
 
 
 def menuPrincipale():
