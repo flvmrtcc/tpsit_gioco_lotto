@@ -10,7 +10,7 @@ def cancellaElementi():     # rimuove tutti gli elementi della finestra
     for widget in finestra.winfo_children():
         widget.destroy()
 
-def menuPrincipale():
+def menuPrincipale():       # schermata grafica del menu principale
     cancellaElementi()
     testoLotto = tk.Label(finestra, text='Lotto', bg="white", font=("Helvetica",50,"bold"))
     testoLotto.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
@@ -20,7 +20,7 @@ def menuPrincipale():
 
 
 # Inserimento username
-def graficaInserimentoUsername():
+def graficaInserimentoUsername():   # schermata grafica per l'inserimento dell'username
     cancellaElementi()
     testo = tk.Label(finestra, text='Inserisci il tuo username:', bg="white", font=("Helvetica",25))
     testo.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
@@ -34,20 +34,20 @@ def graficaInserimentoUsername():
 
 def inserimentoUsername(inputUsername):
     global dati_utente
-    if controlloInserimentoUsername(inputUsername.get()):
+    if controlloInserimentoUsername(inputUsername.get()):   # controlla l'username inserito
         dati_utente["username"] = inputUsername.get()
-        graficaInserimentoCodiceFiscale()
+        graficaInserimentoCodiceFiscale()                   # passa alla schermata di inserimento del codice fiscale
     else:
         testoErrore = tk.Label(text="L'username deve contenere tra i 3 e i 15 caratteri", bg="white", fg="red", font=("Helvetica",12))
         testoErrore.place(x=DIMENSIONE_FINESTRA_X/2, y=350, anchor="center")
 
 def controlloInserimentoUsername(username):
-    if len(username) >= 3 and len(username) <= 15:
+    if len(username) >= 3 and len(username) <= 15:  # controlla il minimo e massimo di caratteri dell'username inserito
         return True
     return False
 
 # Inserimento codice fiscale
-def graficaInserimentoCodiceFiscale():
+def graficaInserimentoCodiceFiscale():   # schermata grafica per l'inserimento del codice fiscale
     cancellaElementi()
     testo = tk.Label(finestra, text='Inserisci il tuo codice fiscale:', bg="white", font=("Helvetica",25))
     testo.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
@@ -61,22 +61,21 @@ def graficaInserimentoCodiceFiscale():
 
 def inserimentoCodiceFiscale(inputCoodicefiscale):
     global dati_utente
-    if inputCoodicefiscale.get():
-        codice_fiscale = inputCoodicefiscale.get()
-        valido = codicefiscale.isvalid(codice_fiscale)
-        if valido:
-            dati_utente["codice_fiscale"] = inputCoodicefiscale.get()
-            if verficaSeMaggiorenne(codice_fiscale):
-                graficaSceltaGiocata()
-            else:                           # se non è maggiorenne
-                cancellaElementi()
-                testoMinorenne = tk.Label(finestra, text='Devi essere maggiorenne per poter giocare!', bg="white", fg="red", font=("Helvetica",20, "bold"))
-                testoMinorenne.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
-                bottoneEsci = tk.Button(text="Esci dal gioco", font=("Helvetica",15, "bold"), command=exit)
-                bottoneEsci.place(x=DIMENSIONE_FINESTRA_X/2, y=250, anchor="center")
-        else:
-            testoErrore = tk.Label(text="Inserisci un codice fiscale valido", bg="white", fg="red", font=("Helvetica",12))
-            testoErrore.place(x=DIMENSIONE_FINESTRA_X/2, y=350, anchor="center")
+    codice_fiscale = (inputCoodicefiscale.get()).upper() # prende dalla casella il codice fiscale inserito
+    valido = codicefiscale.isvalid(codice_fiscale)  # cpntrolla se è valido
+    if valido:
+        dati_utente["codice_fiscale"] = codice_fiscale
+        if verficaSeMaggiorenne(codice_fiscale):    # controlla se è maggiorenne
+            graficaSceltaGiocata()
+        else:                           # se non è maggiorenne
+            cancellaElementi()
+            testoMinorenne = tk.Label(finestra, text='Devi essere maggiorenne per poter giocare!', bg="white", fg="red", font=("Helvetica",20, "bold"))
+            testoMinorenne.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
+            bottoneEsci = tk.Button(text="Esci dal gioco", font=("Helvetica",15, "bold"), command=exit)
+            bottoneEsci.place(x=DIMENSIONE_FINESTRA_X/2, y=250, anchor="center")
+    else:
+        testoErrore = tk.Label(text="Inserisci un codice fiscale valido", bg="white", fg="red", font=("Helvetica",12))
+        testoErrore.place(x=DIMENSIONE_FINESTRA_X/2, y=350, anchor="center")
 
 def verficaSeMaggiorenne(codice_fiscale):
     dataNascita = codicefiscale.get_birthday(codice_fiscale)    # data di nascita ricavata dal codice fiscale
@@ -139,7 +138,7 @@ def graficaSceltaGiocataSecca():
 
 def sceltaGiocataSecca(giocataSecca):
     dati_utente["giocata_secca"] = giocataSecca
-    if giocataSecca:
+    if giocataSecca:    # se la giocata è secca fa scegliere la ruota, altrimenti passa direttamente alla scelta dei numeri da giocare
         graficaSceltaRuota()
     else:
         graficaSceltaNumeriDaGiocare()
@@ -198,7 +197,7 @@ def graficaSceltaNumeriDaGiocare() :
 
     y1 = 0
     inputNumeri = []
-    for i in range(giocatePossibili[dati_utente["giocata_scelta"]]):
+    for i in range(giocatePossibili[dati_utente["giocata_scelta"]]):    # mostra a grafica il numero di caselle per la giocata scelta
         inputNumeri.append(tk.Entry())
         inputNumeri[i].configure(font=("Helvetica", 12), bg="lightgray")
         inputNumeri[i].insert(0,"")
@@ -214,19 +213,19 @@ def sceltaNumeriDaGiocare(inputNumeriScelti):
         numeriScelti.append(num.get())
     
     pos_numero = 0
-    for num in numeriScelti:
+    for num in numeriScelti:    # esegue il ciclo di controllo per ogni numero inserito
         numeroValido = False
-        if len(numeriScelti) == giocatePossibili[dati_utente["giocata_scelta"]]:
+        if len(numeriScelti) == giocatePossibili[dati_utente["giocata_scelta"]]:    # controlla che siano stati inseriti tutti i numeri in base alla giocata scelta
             if num.isdecimal():
                 if int(num) >= 1 and int(num) <= 90:    # controlla che il numero inserito sia compreso tra 1 e 90
-                    if numeriScelti.count(num) == 1:
+                    if numeriScelti.count(num) == 1:    # controlla che il numero sia presente una sola volta nell'array dei numeri scelti
                         numeroValido = True
-        if numeroValido:
+        if numeroValido:    # cambia il colore della casella in base alla correttezza del numero inserito
             inputNumeriScelti[pos_numero].configure(bg="lightgreen")
         else:
             inputNumeriScelti[pos_numero].configure(bg="red")
         
-        if not numeroValido:
+        if not numeroValido:    # se viene trovato un numero non valido l'elenco non è valido
             elencoValido = False
         pos_numero += 1
 
@@ -386,7 +385,9 @@ def graficaFinale():
     bottoneEsci.place(x=DIMENSIONE_FINESTRA_X/2+80, y=440, anchor="center")
 
 
-# Globali
+
+
+# Globali   ---------------------------------------------
 DIMENSIONE_FINESTRA_X = 800
 DIMENSIONE_FINESTRA_Y = 600
 dataEstrazione = ""
