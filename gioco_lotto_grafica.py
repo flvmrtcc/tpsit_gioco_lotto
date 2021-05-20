@@ -6,15 +6,16 @@ import numpy as np
 import os
 
 
-def cancellaElementi():
+def cancellaElementi():     # rimuove tutti gli elementi della finestra
     for widget in finestra.winfo_children():
         widget.destroy()
 
 def menuPrincipale():
+    cancellaElementi()
     testoLotto = tk.Label(finestra, text='Lotto', bg="white", font=("Helvetica",50,"bold"))
     testoLotto.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
 
-    bottoneAvviaPartita = tk.Button(text="Nuova partita", height=3, width=20, bg="lightgreen", font=("Helvetica",20, "bold"), command=graficaInserimentoUsername)
+    bottoneAvviaPartita = tk.Button(text="Nuova giocata", height=3, width=20, bg="lightgreen", font=("Helvetica",20, "bold"), command=graficaInserimentoUsername)
     bottoneAvviaPartita.place(x=DIMENSIONE_FINESTRA_X/2, y=300, anchor="center")
 
 
@@ -37,7 +38,7 @@ def inserimentoUsername(inputUsername):
         dati_utente["username"] = inputUsername.get()
         graficaInserimentoCodiceFiscale()
     else:
-        testoErrore = tk.Label(text="L'username deve contenere tra i 3 e i 15 caratteri", bg="white", fg="red", font=("Helvetica",11))
+        testoErrore = tk.Label(text="L'username deve contenere tra i 3 e i 15 caratteri", bg="white", fg="red", font=("Helvetica",12))
         testoErrore.place(x=DIMENSIONE_FINESTRA_X/2, y=350, anchor="center")
 
 def controlloInserimentoUsername(username):
@@ -67,10 +68,14 @@ def inserimentoCodiceFiscale(inputCoodicefiscale):
             dati_utente["codice_fiscale"] = inputCoodicefiscale.get()
             if verficaSeMaggiorenne(codice_fiscale):
                 graficaSceltaGiocata()
-            else:
-                exit()
+            else:                           # se non è maggiorenne
+                cancellaElementi()
+                testoMinorenne = tk.Label(finestra, text='Devi essere maggiorenne per poter giocare!', bg="white", fg="red", font=("Helvetica",20, "bold"))
+                testoMinorenne.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
+                bottoneEsci = tk.Button(text="Esci dal gioco", font=("Helvetica",15, "bold"), command=exit)
+                bottoneEsci.place(x=DIMENSIONE_FINESTRA_X/2, y=250, anchor="center")
         else:
-            testoErrore = tk.Label(text="Inserisci un codice fiscale valido", bg="white", fg="red", font=("Helvetica",11))
+            testoErrore = tk.Label(text="Inserisci un codice fiscale valido", bg="white", fg="red", font=("Helvetica",12))
             testoErrore.place(x=DIMENSIONE_FINESTRA_X/2, y=350, anchor="center")
 
 def verficaSeMaggiorenne(codice_fiscale):
@@ -229,7 +234,7 @@ def sceltaNumeriDaGiocare(inputNumeriScelti):
         dati_utente["numeri_scelti"] = numeriScelti
         graficaSceltaImportoDaGiocare()
     else:
-        testoErrore = tk.Label(text="Sono stati inseriti alcuni numeri non validi.\nInserisci dei numeri da giocare validi!", bg="white", fg="red", font=("Helvetica",11))
+        testoErrore = tk.Label(text="Sono stati inseriti alcuni numeri non validi.\nInserisci dei numeri da giocare validi!", bg="white", fg="red", font=("Helvetica",12))
         testoErrore.place(x=DIMENSIONE_FINESTRA_X/2, y=550, anchor="center")
 
 # Scelta importo da giocare
@@ -258,7 +263,7 @@ def controlloSceltaImportoDaGiocare(inputImportoEuro):
 
     if not valido:              # Se l'importo inserito non è valido mostra l'errore
         inputImportoEuro.configure(bg="red")
-        testoErrore = tk.Label(text="Inserisci un importo da giocare valido", bg="white", fg="red", font=("Helvetica",11))
+        testoErrore = tk.Label(text="Inserisci un importo da giocare valido", bg="white", fg="red", font=("Helvetica",12))
         testoErrore.place(x=DIMENSIONE_FINESTRA_X/2, y=350, anchor="center")
 
     if valido:
@@ -283,6 +288,7 @@ def leggiEstrazione(nomeFileEstrazione):
     return read_dictionary
 
 def estrazione():
+    global dataEstrazione
     ruote_estrazione = {
         "Torino" : [],
         "Milano" : [],
@@ -302,7 +308,7 @@ def estrazione():
     if oraAttuale < 20:                 # se non sono passate le 20 si guarda l'estrazione precedente
         giornoEstrazione -= 1
     nomeFileEstrazione = f'{dataAttuale.year}-{dataAttuale.month}-{giornoEstrazione}'
-
+    dataEstrazione = nomeFileEstrazione     # salva nella variabile globale la data dell'ultima estrazione 
     if not os.path.isfile(f"{nomeFileEstrazione}.npy"):     # controlla se esiste già il file dell'estrazione
         for element, valore in ruote_estrazione.items():
             ruote_estrazione[element] = np.random.randint(1, 90,(5))    # estrae 5 numeri casuali per ogni ruota
@@ -328,10 +334,8 @@ def calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_es
     vincitaTotale = 0
     for ruota,numeriEstrazione in ruote_estrazione.items():     # esegue il for per ogni ruota
         if ruota_scelta == ruota:   # se la ruota corrente è quella scelta
-            # print(f"la ruota scelta è {ruota}")
-            # print(f"i numeri usciti sono: {numeriEstrazione}")
-            for num in numeri_scelti:
-                if int(num) in numeriEstrazione:
+            for num in numeri_scelti:           # effettua il controllo seguente per tutti i numeri inseriti
+                if int(num) in numeriEstrazione:    # controlla se il numero inserito è presente nell'array dell'estrazione
                     numeriCorretti += 1
     if numeriCorretti != 0 and len(numeri_scelti) == numeriCorretti:
         vincitaTotale = (int(vinciteGiocataSecca[str(numeriCorretti)]) * int(importo_giocato))
@@ -349,8 +353,8 @@ def calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazi
     for ruota,numeriEstrazione in ruote_estrazione.items():     # esegue il for per ogni ruota
         if ruota != "NAZIONALE":            # la ruota nazionale viene saltata quando si gioca su tutte le ruote
             numeriCorretti = 0
-            for num in numeri_scelti:
-                if int(num) in numeriEstrazione:
+            for num in numeri_scelti:           # effettua il controllo seguente per tutti i numeri inseriti
+                if int(num) in numeriEstrazione:    # controlla se il numero inserito è presente nell'array dell'estrazione
                     numeriCorretti += 1
             if numeriCorretti != 0 and len(numeri_scelti) == numeriCorretti:
                 vincitaTotale += (int(vinciteGiocata[str(numeriCorretti)]) * int(importo_giocato))
@@ -362,15 +366,30 @@ def graficaFinale():
     testo.place(x=DIMENSIONE_FINESTRA_X/2, y=100, anchor="center")
 
     if dati_utente["vincita_totale"] > 0:
-        testo2 = tk.Label(finestra, text=(f"Complimenti " + dati_utente["username"] + "! \nLa tua vincita è di: " + str(dati_utente["vincita_totale"]) + " euro."), bg="white", fg="green", font=("Helvetica",25))
+        testo2 = tk.Label(finestra, text=f"Complimenti {dati_utente['username']}! \nLa tua vincita è di: {dati_utente['vincita_totale']} euro.", bg="white", fg="green", font=("Helvetica",25))
     else:
         testo2 = tk.Label(finestra, text="Non hai vinto, riprova.", bg="white", fg="red", font=("Helvetica",25))
-    testo2.place(x=DIMENSIONE_FINESTRA_X/2, y=200, anchor="center")
+    testo2.place(x=DIMENSIONE_FINESTRA_X/2, y=260, anchor="center")
+
+    testo3 = tk.Label(finestra, text=f"Data ultima estrazione: {dataEstrazione} alle ore 18:00", bg="white", fg="black", font=("Helvetica",13))
+    testo3.place(x=DIMENSIONE_FINESTRA_X-200, y=580, anchor="center")
+
+    if dati_utente['giocata_secca']: # stringa del tipo di giocata effettuata
+        strTipoGiocata = f"Sulla ruota: {dati_utente['ruota_scelta']}"
+    else:
+        strTipoGiocata = "Su tutte le ruote"
+    testo4 = tk.Label(finestra, text=f"Numeri giocati: {dati_utente['numeri_scelti']}\n {strTipoGiocata}", bg="white", fg="gray", font=("Helvetica",13))
+    testo4.place(x=DIMENSIONE_FINESTRA_X/2, y=180, anchor="center")
+    bottoneRigioca = tk.Button(text="Nuova giocata", font=("Helvetica",12, "bold"), command=menuPrincipale)
+    bottoneRigioca.place(x=DIMENSIONE_FINESTRA_X/2-80, y=440, anchor="center")
+    bottoneEsci = tk.Button(text="Esci dal gioco", font=("Helvetica",12, "bold"), command=exit)
+    bottoneEsci.place(x=DIMENSIONE_FINESTRA_X/2+80, y=440, anchor="center")
 
 
 # Globali
 DIMENSIONE_FINESTRA_X = 800
 DIMENSIONE_FINESTRA_Y = 600
+dataEstrazione = ""
 
 finestra = tk.Tk()
 finestra.title("Gioco lotto - Martucci")
