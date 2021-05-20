@@ -28,13 +28,22 @@ def graficaInserimentoUsername():
     inputUsername.insert(0,"")
     inputUsername.place(x=DIMENSIONE_FINESTRA_X/2, y=200, height=40, width=300, anchor="center")
 
-    bottoneInvioUsername = tk.Button(text="Conferma", command=lambda:inserimentoUsername(inputUsername))
+    bottoneInvioUsername = tk.Button(text="Conferma", font=("Helvetica",12, "bold"), command=lambda:inserimentoUsername(inputUsername))
     bottoneInvioUsername.place(x=DIMENSIONE_FINESTRA_X/2, y=250, anchor="center")
 
 def inserimentoUsername(inputUsername):
     global dati_utente
-    dati_utente["username"] = inputUsername.get()
-    graficaInserimentoCodiceFiscale()
+    if controlloInserimentoUsername(inputUsername.get()):
+        dati_utente["username"] = inputUsername.get()
+        graficaInserimentoCodiceFiscale()
+    else:
+        testoErrore = tk.Label(text="L'username deve contenere tra i 3 e i 15 caratteri", bg="white", fg="red", font=("Helvetica",11))
+        testoErrore.place(x=DIMENSIONE_FINESTRA_X/2, y=350, anchor="center")
+
+def controlloInserimentoUsername(username):
+    if len(username) >= 3 and len(username) <= 15:
+        return True
+    return False
 
 # Inserimento codice fiscale
 def graficaInserimentoCodiceFiscale():
@@ -46,7 +55,7 @@ def graficaInserimentoCodiceFiscale():
     inputCoodicefiscale.insert(0,"SDYSTO40S06G159X")
     inputCoodicefiscale.place(x=DIMENSIONE_FINESTRA_X/2, y=200, height=40, width=300, anchor="center")
     
-    bottoneInvioCodicefiscale = tk.Button(text="Conferma", command=lambda:inserimentoCodiceFiscale(inputCoodicefiscale))
+    bottoneInvioCodicefiscale = tk.Button(text="Conferma", font=("Helvetica",12, "bold"), command=lambda:inserimentoCodiceFiscale(inputCoodicefiscale))
     bottoneInvioCodicefiscale.place(x=DIMENSIONE_FINESTRA_X/2, y=250, anchor="center")
 
 def inserimentoCodiceFiscale(inputCoodicefiscale):
@@ -92,19 +101,19 @@ def graficaSceltaGiocata():
     testo = tk.Label(finestra, text='Scegli il tipo di giocata da effettuare: ', bg="white", font=("Helvetica",25))
     testo.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
     
-    bottoneSceltaGiocata = tk.Button(text="Estratto", command=lambda:sceltaGiocata("Estratto"))
+    bottoneSceltaGiocata = tk.Button(text="Estratto", width=8, font=("Helvetica",12, "bold"), command=lambda:sceltaGiocata("Estratto"))
     bottoneSceltaGiocata.place(x=DIMENSIONE_FINESTRA_X/2-200, y=250, anchor="center")
 
-    bottoneSceltaGiocata = tk.Button(text="Ambo", command=lambda:sceltaGiocata("Ambo"))
+    bottoneSceltaGiocata = tk.Button(text="Ambo", width=8, font=("Helvetica",12, "bold"), command=lambda:sceltaGiocata("Ambo"))
     bottoneSceltaGiocata.place(x=DIMENSIONE_FINESTRA_X/2-100, y=250, anchor="center")
 
-    bottoneSceltaGiocata = tk.Button(text="Terno", command=lambda:sceltaGiocata("Terno"))
+    bottoneSceltaGiocata = tk.Button(text="Terno", width=8, font=("Helvetica",12, "bold"), command=lambda:sceltaGiocata("Terno"))
     bottoneSceltaGiocata.place(x=DIMENSIONE_FINESTRA_X/2, y=250, anchor="center")
     
-    bottoneSceltaGiocata = tk.Button(text="Quaterna", command=lambda:sceltaGiocata("Quaterna"))
+    bottoneSceltaGiocata = tk.Button(text="Quaterna", width=8, font=("Helvetica",12, "bold"), command=lambda:sceltaGiocata("Quaterna"))
     bottoneSceltaGiocata.place(x=DIMENSIONE_FINESTRA_X/2+100, y=250, anchor="center")
 
-    bottoneSceltaGiocata = tk.Button(text="Cinquina", command=lambda:sceltaGiocata("Cinquina"))
+    bottoneSceltaGiocata = tk.Button(text="Cinquina", width=8, font=("Helvetica",12, "bold"), command=lambda:sceltaGiocata("Cinquina"))
     bottoneSceltaGiocata.place(x=DIMENSIONE_FINESTRA_X/2+200, y=250, anchor="center")
 
 def sceltaGiocata(tipoGiocata):
@@ -117,10 +126,10 @@ def graficaSceltaGiocataSecca():
     testo = tk.Label(finestra, text='Vuoi effettuare una giocata secca?', bg="white", font=("Helvetica",25))
     testo.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
     
-    bottoneSceltaGiocata = tk.Button(text="Sì", command=lambda:sceltaGiocataSecca(True))
+    bottoneSceltaGiocata = tk.Button(text="Sì", width=3, font=("Helvetica",20, "bold"), command=lambda:sceltaGiocataSecca(True))
     bottoneSceltaGiocata.place(x=DIMENSIONE_FINESTRA_X/2-50, y=250, anchor="center")
 
-    bottoneSceltaGiocata = tk.Button(text="No", command=lambda:sceltaGiocataSecca(False))
+    bottoneSceltaGiocata = tk.Button(text="No", width=3, font=("Helvetica",20, "bold"), command=lambda:sceltaGiocataSecca(False))
     bottoneSceltaGiocata.place(x=DIMENSIONE_FINESTRA_X/2+50, y=250, anchor="center")
 
 def sceltaGiocataSecca(giocataSecca):
@@ -136,37 +145,37 @@ def graficaSceltaRuota():
     testo = tk.Label(finestra, text='Scegli la ruota su cui puntare: ', bg="white", font=("Helvetica",25))
     testo.place(x=DIMENSIONE_FINESTRA_X/2, y=120, anchor="center")
     
-    bottoneSceltaRuota = tk.Button(text="Torino", command=lambda:sceltaRuota("Torino"))
+    bottoneSceltaRuota = tk.Button(text="Torino", width=8, font=("Helvetica",12, "bold"), command=lambda:sceltaRuota("Torino"))
     bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2-200, y=250, anchor="center")
 
-    bottoneSceltaRuota = tk.Button(text="Milano", command=lambda:sceltaRuota("Milano"))
+    bottoneSceltaRuota = tk.Button(text="Milano", width=8, font=("Helvetica",12, "bold"), command=lambda:sceltaRuota("Milano"))
     bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2-100, y=250, anchor="center")
 
-    bottoneSceltaRuota = tk.Button(text="Venezia", command=lambda:sceltaRuota("Venezia"))
+    bottoneSceltaRuota = tk.Button(text="Venezia", width=8, font=("Helvetica",12, "bold"), command=lambda:sceltaRuota("Venezia"))
     bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2, y=250, anchor="center")
     
-    bottoneSceltaRuota = tk.Button(text="Genova", command=lambda:sceltaRuota("Genova"))
+    bottoneSceltaRuota = tk.Button(text="Genova", width=8, font=("Helvetica",12, "bold"), command=lambda:sceltaRuota("Genova"))
     bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2+100, y=250, anchor="center")
 
-    bottoneSceltaRuota = tk.Button(text="Firenze", command=lambda:sceltaRuota("Firenze"))
+    bottoneSceltaRuota = tk.Button(text="Firenze", width=8, font=("Helvetica",12, "bold"), command=lambda:sceltaRuota("Firenze"))
     bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2+200, y=250, anchor="center")
 
-    bottoneSceltaRuota = tk.Button(text="Roma", command=lambda:sceltaRuota("Roma"))
+    bottoneSceltaRuota = tk.Button(text="Roma", width=8, font=("Helvetica",12, "bold"), command=lambda:sceltaRuota("Roma"))
     bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2-200, y=300, anchor="center")
 
-    bottoneSceltaRuota = tk.Button(text="Napoli", command=lambda:sceltaRuota("Napoli"))
+    bottoneSceltaRuota = tk.Button(text="Napoli", width=8, font=("Helvetica",12, "bold"), command=lambda:sceltaRuota("Napoli"))
     bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2-100, y=300, anchor="center")
 
-    bottoneSceltaRuota = tk.Button(text="Bari", command=lambda:sceltaRuota("Bari"))
+    bottoneSceltaRuota = tk.Button(text="Bari", width=8, font=("Helvetica",12, "bold"), command=lambda:sceltaRuota("Bari"))
     bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2, y=300, anchor="center")
     
-    bottoneSceltaRuota = tk.Button(text="Palermo", command=lambda:sceltaRuota("Palermo"))
+    bottoneSceltaRuota = tk.Button(text="Palermo", width=8, font=("Helvetica",12, "bold"), command=lambda:sceltaRuota("Palermo"))
     bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2+100, y=300, anchor="center")
 
-    bottoneSceltaRuota = tk.Button(text="Cagliari", command=lambda:sceltaRuota("Cagliari"))
+    bottoneSceltaRuota = tk.Button(text="Cagliari", width=8, font=("Helvetica",12, "bold"), command=lambda:sceltaRuota("Cagliari"))
     bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2+200, y=300, anchor="center")
 
-    bottoneSceltaRuota = tk.Button(text="NAZIONALE", command=lambda:sceltaRuota("NAZIONALE"))
+    bottoneSceltaRuota = tk.Button(text="NAZIONALE", width=12, font=("Helvetica",12, "bold"), command=lambda:sceltaRuota("NAZIONALE"))
     bottoneSceltaRuota.place(x=DIMENSIONE_FINESTRA_X/2, y=350, anchor="center")
 
 def sceltaRuota(ruota_scelta):
@@ -190,7 +199,7 @@ def graficaSceltaNumeriDaGiocare() :
         inputNumeri[i].insert(0,"")
         inputNumeri[i].place(x=DIMENSIONE_FINESTRA_X/2, y=200+y1, height=40, width=300, anchor="center")
         y1 += 50
-    bottoneInvioCodicefiscale = tk.Button(text="Conferma", command=lambda:sceltaNumeriDaGiocare(inputNumeri))
+    bottoneInvioCodicefiscale = tk.Button(text="Conferma", font=("Helvetica",12, "bold"), command=lambda:sceltaNumeriDaGiocare(inputNumeri))
     bottoneInvioCodicefiscale.place(x=DIMENSIONE_FINESTRA_X/2, y=200+y1+10, anchor="center")
 
 def sceltaNumeriDaGiocare(inputNumeriScelti):
@@ -237,7 +246,7 @@ def graficaSceltaImportoDaGiocare():
     inputImportoEuro.insert(0,"1")
     inputImportoEuro.place(x=DIMENSIONE_FINESTRA_X/2, y=200, height=40, width=300, anchor="center")
 
-    bottoneInvioImportoEuro = tk.Button(text="Conferma", command=lambda:controlloSceltaImportoDaGiocare(inputImportoEuro))
+    bottoneInvioImportoEuro = tk.Button(text="Conferma", font=("Helvetica",12, "bold"), command=lambda:controlloSceltaImportoDaGiocare(inputImportoEuro))
     bottoneInvioImportoEuro.place(x=DIMENSIONE_FINESTRA_X/2, y=250, anchor="center")
 
 def controlloSceltaImportoDaGiocare(inputImportoEuro):
@@ -319,13 +328,13 @@ def calcoloPunteggioSecca(ruota_scelta, numeri_scelti, importo_giocato, ruote_es
     vincitaTotale = 0
     for ruota,numeriEstrazione in ruote_estrazione.items():     # esegue il for per ogni ruota
         if ruota_scelta == ruota:   # se la ruota corrente è quella scelta
-            print(f"la ruota scelta è {ruota}")
-            print(f"i numeri usciti sono: {numeriEstrazione}")
+            # print(f"la ruota scelta è {ruota}")
+            # print(f"i numeri usciti sono: {numeriEstrazione}")
             for num in numeri_scelti:
                 if int(num) in numeriEstrazione:
                     numeriCorretti += 1
     if numeriCorretti != 0 and len(numeri_scelti) == numeriCorretti:
-        vincitaTotale = (vinciteGiocataSecca[str(numeriCorretti)] * importo_giocato)
+        vincitaTotale = (int(vinciteGiocataSecca[str(numeriCorretti)]) * int(importo_giocato))
     return vincitaTotale
 
 def calcoloPunteggioSuTutteLeRuote(numeri_scelti, importo_giocato, ruote_estrazione):
@@ -353,10 +362,10 @@ def graficaFinale():
     testo.place(x=DIMENSIONE_FINESTRA_X/2, y=100, anchor="center")
 
     if dati_utente["vincita_totale"] > 0:
-        testo2 = tk.Label(finestra, text=(f"Complimenti " + dati_utente["username"] + "! La tua vincita è di: " + str(dati_utente["vincita_totale"]) + " euro."), bg="white", fg="green", font=("Helvetica",25))
+        testo2 = tk.Label(finestra, text=(f"Complimenti " + dati_utente["username"] + "! \nLa tua vincita è di: " + str(dati_utente["vincita_totale"]) + " euro."), bg="white", fg="green", font=("Helvetica",25))
     else:
         testo2 = tk.Label(finestra, text="Non hai vinto, riprova.", bg="white", fg="red", font=("Helvetica",25))
-    testo2.place(x=DIMENSIONE_FINESTRA_X/2, y=140, anchor="center")
+    testo2.place(x=DIMENSIONE_FINESTRA_X/2, y=200, anchor="center")
 
 
 # Globali
@@ -387,7 +396,7 @@ giocatePossibili = {            # dizionario per indicare quanti numeri scerglie
         "Terno" : 3,
         "Quaterna" : 4,
         "Cinquina" : 5
-    }
+}
 
 
 def mainGioco():
